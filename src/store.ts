@@ -35,7 +35,7 @@ export default new Vuex.Store({
 			state.auth.user = payload;
 		},
 		removeUser(state) {
-			delete state.auth.user;
+			state.auth.user = null;
 		},
 		setAuthStatus(state, payload) {
 			state.auth.status = payload;

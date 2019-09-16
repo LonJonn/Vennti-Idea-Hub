@@ -1,0 +1,29 @@
+user
+    skills - skillsEnum[]
+    commentsCount - int
+
+idea
+    status - enum{ open, active, solved, blocked }
+    description - string
+    benefit - string
+    openedBy - id
+    assigned - id[]
+    createdOn - datetime
+    difficulty - enum{ easy, medium, hard }
+    skillsRequired - skillsEnum int[]
+    estimatedTime - (int, int)
+    likes - userId[]
+
+    comments
+        from - userId
+        content - string
+        createdOn - datetime
+        likes - userId[]
+
+skillsEnum ->
+    {
+        technical,
+        business,
+        project manager
+    }
+
