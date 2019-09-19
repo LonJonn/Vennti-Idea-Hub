@@ -27,3 +27,9 @@ skillsEnum ->
         project manager
     }
 
+DONE: Adding new ideas
+DONE: Deleting ideas
+Idea Component
+Updating ideas
+Likes
+Comments
