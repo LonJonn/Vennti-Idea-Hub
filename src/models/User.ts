@@ -1,18 +1,45 @@
-import BaseDocument from "./BaseDocument";
+import BaseReference from "./BaseReference";
+import { UserData, UpdateUser, Skill } from "./typings";
 
-type qsType = firebase.firestore.QueryDocumentSnapshot;
+export default class User extends BaseReference {
+	private _data: UserData;
 
-export default class User extends BaseDocument {
-	name: string = null;
-	skills: Skill[] = null;
-	commentsCount: number = null;
-
-	constructor(id?: string | qsType) {
+	constructor(id?: string) {
 		super("users", id);
 	}
 
-	getSkills() {
-		if (!this.skills) return;
-		return this.skills.map(skillVal => Skill[skillVal]);
+	get data() {
+		return this._data;
+	}
+
+	get readableSkills() {
+		return this._data.skills.map(skill => Skill[skill]);
+	}
+
+	async init() {
+		const doc = await this.ref.get();
+		this._data = doc.data() as UserData;
+		return this;
+	}
+
+	// Is there a better way to do this?
+	async update(newData: UpdateUser) {
+		Object.assign(this._data, newData);
+		await super.update(newData);
+	}
+
+	async addSkill(newSkill: Skill) {
+		if (this._data.skills.includes(newSkill)) throw new Error("User already has this skill.");
+		await this.update({
+			skills: [...this._data.skills, newSkill]
+		});
+	}
+
+	async removeSkill(toRemove: Skill) {
+		if (!this._data.skills.includes(toRemove))
+			throw new Error("User does not have that skill.");
+		await this.update({
+			skills: this._data.skills.filter(skill => skill !== toRemove)
+		});
 	}
 }

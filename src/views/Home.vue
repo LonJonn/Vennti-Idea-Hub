@@ -18,7 +18,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
+
 import { auth } from "../firebase";
+
+import { User } from "../models";
+import { Skill } from "../models/typings";
 
 export default Vue.extend({
 	name: "home",
@@ -30,6 +34,12 @@ export default Vue.extend({
 		currentUser() {
 			return auth.currentUser;
 		}
+	},
+	async created() {
+		const me = await new User("RBDPIT0ZCTQwf5Q3ysh4gR4PTyl1").init();
+		console.log(me.data);
+		me.removeSkill(Skill.DMP);
+		console.log(me.readableSkills);
 	}
 });
 </script>

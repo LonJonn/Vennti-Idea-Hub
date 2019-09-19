@@ -1,29 +1,56 @@
-declare module "model" {
-	declare global {
-		type Timestamp = firebase.firestore.Timestamp;
-		type DocRef = firebase.firestore.DocumentReference;
-		type QueryDoc = firebase.firestore.QueryDocumentSnapshot;
-		type QuerySnap = firebase.firestore.QuerySnapshot;
+import User from "./User";
 
-		enum Skill {
-			Technical,
-			Business,
-			ProjectManager,
-			DMP,
-			CDP
-		}
+export enum Skill {
+	Technical,
+	Business,
+	ProjectManager,
+	DMP,
+	CDP
+}
 
-		enum IdeaStatus {
-			Open,
-			Active,
-			Solved,
-			Blocked
-		}
+export enum IdeaStatus {
+	Open,
+	Active,
+	Solved,
+	Blocked
+}
 
-		enum IdeaDifficulty {
-			Easy,
-			Medium,
-			Hard
-		}
-	}
+export enum IdeaDifficulty {
+	Easy,
+	Medium,
+	Hard
+}
+
+export interface UserData {
+	name: string;
+	skills: Skill[];
+	commentsCount: number;
+}
+
+export interface UpdateUser {
+	name?: string;
+	skills?: Skill[];
+}
+
+export interface NewIdea {
+	benefit: string;
+	createdOn: firebase.firestore.Timestamp;
+	description: string;
+	owner: User; // Temp
+	skillsRequired: Skill[];
+	timeEstimation: [number, number];
+}
+
+export interface IdeaData extends NewIdea {
+	assigned: User[]; // Temp
+	likes: User[]; // Temp
+	status: IdeaStatus;
+}
+
+export interface UpdateIdea {
+	benefit?: string;
+	description?: string;
+	status?: IdeaStatus;
+	skillsRequired?: Skill[];
+	timeEstimation?: [number, number];
 }

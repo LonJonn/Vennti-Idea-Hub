@@ -13,9 +13,6 @@
 		"quotemark": [true, "double"],
 		"trailing-comma": false,
 		"arrow-parens": false,
-		"curly": false,
-
-		"strict-type-predicates": false,
-		"member-access": false
+		"curly": false
 	}
 }

@@ -1,35 +1,20 @@
-import BaseDocument from "./BaseDocument";
-import User from "./User";
+import BaseReference from "./BaseReference";
+import { IdeaData } from "./typings";
 
-import { db } from "@/firebase";
+export default class Idea extends BaseReference {
+	private _data: IdeaData;
 
-export default class Idea extends BaseDocument {
-	static all = db.collection("ideas");
-	static collection(ds: QuerySnap) {
-		return ds.docs.map(doc => new this(doc));
+	constructor(id?: string) {
+		super("users", id);
 	}
 
-	status: IdeaStatus;
-	description: string;
-	benefit: string;
-	owner: DocRef;
-	assigned: DocRef[];
-	createdOn: Timestamp;
-	difficulty: IdeaDifficulty;
-	skillsRequired: Skill[];
-	timeEstimation: [number, number];
-	likes: DocRef[];
-
-	constructor(init?: string | QueryDoc) {
-		super("ideas", init);
+	async init() {
+		const doc = await this.ref.get();
+		this._data = doc.data() as IdeaData;
+		return this;
 	}
 
-	async getOwner() {
-		if (!this.owner) throw new Error("No owner.");
-		return await new User(this.owner.id).fetch();
-	}
-
-	getNumberOfAssigned() {
-		return this.assigned.length;
+	get data() {
+		return this._data;
 	}
 }
