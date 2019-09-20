@@ -35,14 +35,14 @@ export interface UpdateUser {
 
 export interface NewIdea {
 	benefit: string;
-	createdOn: firebase.firestore.Timestamp;
 	description: string;
-	owner: fs.DocumentReference;
 	skillsRequired: Skill[];
 	timeEstimation: [number, number];
 }
 
 export interface IdeaData extends NewIdea {
+	owner: fs.DocumentReference;
+	createdOn: firebase.firestore.Timestamp;
 	assigned: fs.DocumentReference[];
 	likes: fs.DocumentReference[];
 	status: IdeaStatus;

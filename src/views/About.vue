@@ -1,8 +1,14 @@
 <template>
 	<div class="about" :class="[{ 'bg-gray-300': loading }]">
-		<div class="inputs"></div>
+		<div class="inputs">
+			<input v-model="newIdea.description" placeholder="description" type="text" />
+			<input v-model="newIdea.benefit" placeholder="benefit" type="text" />
+			<input v-model="newIdea.skillsRequired" placeholder="required skills" type="text" />
+			<input v-model.number="newIdea.timeEstimation[0]" placeholder="minimum hours" type="number" />
+			<input v-model.number="newIdea.timeEstimation[1]" placeholder="maximum hours" type="number" />
+		</div>
+		<button @click="createIdea" class="bg-blue-500 text-white px-6 py-1 rounded mt-3 mb-6">Add</button>
 		<AppIdea :idea="idea" v-for="(idea, idx) in ideas" :key="idx" />
-		<button class="bg-yellow-400 rounded-lg px-3 py-2 m-3">Yeet</button>
 	</div>
 </template>
 
@@ -14,6 +20,7 @@ import { mapGetters } from "vuex";
 
 import { User, Idea } from "@/models";
 import { db, auth } from "../firebase";
+import { NewIdea, Skill } from "../models/typings";
 
 @Component({
 	components: { AppIdea },
@@ -26,6 +33,12 @@ export default class About extends Vue {
 	// Data
 	loading: boolean = true;
 	ideas: Idea[] = null;
+	newIdea: NewIdea = {
+		benefit: null,
+		description: null,
+		skillsRequired: [],
+		timeEstimation: [null, null]
+	};
 
 	// Hooks
 	async created() {
@@ -33,17 +46,20 @@ export default class About extends Vue {
 			.where("owner", "==", this.userInstance.ref)
 			.orderBy("createdOn", "desc")
 			.onSnapshot(ds => {
-				this.ideas = Idea.collection(ds);
+				this.ideas = Idea.fromCollection(ds);
+				this.loading = false;
 			});
+	}
 
-		const me = await new User(auth.currentUser.uid).fetch();
-		this.loading = false;
+	// Methods
+	createIdea() {
+		Idea.create(this.newIdea).catch(err => alert(err.message));
 	}
 }
 </script>
 
 <style lang="postcss" scoped>
 .inputs > input {
-	@apply my-3 py-1 px-2 bg-blue-200 rounded block;
+	@apply mt-3 py-1 px-2 bg-gray-200 rounded block;
 }
 </style>

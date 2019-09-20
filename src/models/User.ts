@@ -13,10 +13,6 @@ export default class User extends BaseReference {
 		return this._data;
 	}
 
-	get readableSkills() {
-		return this._data.skills.map(skill => Skill[skill]);
-	}
-
 	async init() {
 		const doc = await this.ref.get();
 		this._data = doc.data() as UserData;
