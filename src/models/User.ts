@@ -1,11 +1,12 @@
 import BaseReference from "./BaseReference";
 import { UserData, UpdateUser, Skill } from "./typings";
+import { firestore as fs } from "firebase/app";
 
 export default class User extends BaseReference {
 	private _data: UserData;
 
-	constructor(id?: string) {
-		super("users", id);
+	constructor(init?: string | fs.DocumentReference) {
+		super("users", init);
 	}
 
 	get data() {
