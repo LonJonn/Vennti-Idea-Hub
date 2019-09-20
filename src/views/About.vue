@@ -1,11 +1,11 @@
 <template>
 	<div class="about" :class="[{ 'bg-gray-300': loading }]">
 		<div class="inputs">
-			<input v-model="newIdea.description" placeholder="description" type="text" />
-			<input v-model="newIdea.benefit" placeholder="benefit" type="text" />
-			<input v-model="newIdea.skillsRequired" placeholder="required skills" type="text" />
-			<input v-model.number="newIdea.timeEstimation[0]" placeholder="minimum hours" type="number" />
-			<input v-model.number="newIdea.timeEstimation[1]" placeholder="maximum hours" type="number" />
+			<input v-model="ideaForm.description" placeholder="description" type="text" />
+			<input v-model="ideaForm.benefit" placeholder="benefit" type="text" />
+			<input v-model="ideaForm.skillsRequired" placeholder="required skills" type="text" />
+			<input v-model.number="ideaForm.timeEstimation[0]" placeholder="minimum hours" type="number" />
+			<input v-model.number="ideaForm.timeEstimation[1]" placeholder="maximum hours" type="number" />
 		</div>
 		<button @click="createIdea" class="bg-blue-500 text-white px-6 py-1 rounded mt-3 mb-6">Add</button>
 		<AppIdea :idea="idea" v-for="(idea, idx) in ideas" :key="idx" />
@@ -33,7 +33,7 @@ export default class About extends Vue {
 	// Data
 	loading: boolean = true;
 	ideas: Idea[] = null;
-	newIdea: NewIdea = {
+	ideaForm: NewIdea = {
 		benefit: null,
 		description: null,
 		skillsRequired: [],
@@ -53,7 +53,16 @@ export default class About extends Vue {
 
 	// Methods
 	createIdea() {
-		Idea.create(this.newIdea).catch(err => alert(err.message));
+		Idea.create(this.ideaForm)
+			.then(() => {
+				this.ideaForm = {
+					benefit: null,
+					description: null,
+					skillsRequired: [],
+					timeEstimation: [null, null]
+				};
+			})
+			.catch(err => alert(err.message));
 	}
 }
 </script>

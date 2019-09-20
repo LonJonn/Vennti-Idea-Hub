@@ -32,7 +32,10 @@ export default class Idea extends BaseReference {
 			status: IdeaStatus.Open
 		};
 
-		const validTimeRange = payload.timeEstimation[0] < payload.timeEstimation[1];
+		// Check for negative or out of order range
+		const validTimeRange =
+			!payload.timeEstimation.some(hours => hours < 0) &&
+			payload.timeEstimation[0] < payload.timeEstimation[1];
 
 		if (!validTimeRange) throw new Error("Invalid time estimation.");
 
