@@ -7,9 +7,13 @@ export default abstract class BaseReference {
 	constructor(collection: string, init?: string | firestore.DocumentReference) {
 		const cRef = db.collection(collection);
 
-		if (init instanceof firestore.DocumentReference) this._ref = init;
-		else if (typeof init === "string") this._ref = cRef.doc(init);
-		else this._ref = cRef.doc(); // create new reference if no initial provided
+		if (init instanceof firestore.DocumentReference) {
+			this._ref = init;
+		} else if (typeof init === "string") {
+			this._ref = cRef.doc(init);
+		} else {
+			this._ref = cRef.doc(); // create new reference if no initial provided
+		}
 	}
 
 	get ref() {

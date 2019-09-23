@@ -16,6 +16,7 @@
 		"curly": false,
 
 		"member-access": false,
+		"member-ordering": false,
 		"variable-name": {
 			"options": ["allow-leading-underscore"]
 		}

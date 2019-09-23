@@ -1,7 +1,7 @@
 <template>
 	<div class="mb-5">
 		<div v-if="loading" class="text-xl font-bold bg-blue-500 text-white">loading</div>
-		<div v-else class="list bg-green-300 rounded text-green-900 p-5">
+		<div v-else class="list bg-gray-300 rounded text-blue-800 p-5">
 			<li>description: {{ idea.data.description }}</li>
 			<li>benefit: {{ idea.data.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>

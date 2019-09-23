@@ -22,13 +22,14 @@ import { User, Idea } from "@/models";
 import { db, auth } from "../firebase";
 import { NewIdea, Skill } from "../models/typings";
 
+import { Getter } from "vuex-class";
+
 @Component({
-	components: { AppIdea },
-	computed: mapGetters(["userInstance"])
+	components: { AppIdea }
 })
 export default class About extends Vue {
-	// Mapped Getters
-	userInstance: User;
+	// Mapped Store
+	@Getter userInstance: User;
 
 	// Data
 	loading: boolean = true;

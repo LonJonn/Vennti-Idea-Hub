@@ -52,11 +52,19 @@ export default class Idea extends BaseReference {
 		super("ideas", init);
 	}
 
+	private checkInit() {
+		if (!this._data) {
+			throw new Error(`Idea not initialised.\nPlease call .init() on Idea instance.`);
+		}
+	}
+
 	get data() {
 		return this._data;
 	}
 
 	set data(payload: IdeaData) {
+		this.checkInit();
+
 		this.ref.set(payload);
 		this._data = payload;
 	}
@@ -72,6 +80,8 @@ export default class Idea extends BaseReference {
 
 	// Is there a better way to do this?
 	async update(newData: UpdateIdea) {
+		this.checkInit();
+
 		Object.assign(this._data, newData);
 		await super.update(newData);
 	}
