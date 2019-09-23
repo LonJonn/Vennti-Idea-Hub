@@ -36,6 +36,7 @@ router.beforeEach((to, from, next) => {
 
 	if (requiresAuth && !store.getters.isAuthed) {
 		alert("auth required!");
+		router.push("/");
 	} else {
 		next();
 	}
