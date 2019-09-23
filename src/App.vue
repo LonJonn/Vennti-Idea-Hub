@@ -14,6 +14,6 @@
 }
 
 #nav > a.router-link-exact-active {
-	@apply text-green-500 font-semibold;
+	@apply text-blue-500 font-semibold;
 }
 </style>

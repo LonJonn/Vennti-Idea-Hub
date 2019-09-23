@@ -13,6 +13,12 @@
 		"quotemark": [true, "double"],
 		"trailing-comma": false,
 		"arrow-parens": false,
-		"curly": false
+		"curly": false,
+
+		"member-access": false,
+		"member-ordering": false,
+		"variable-name": {
+			"options": ["allow-leading-underscore"]
+		}
 	}
 }

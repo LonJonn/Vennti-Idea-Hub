@@ -16,20 +16,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { Vue, Component } from "vue-property-decorator";
+import { Getter, Action } from "vuex-class";
+
 import { auth } from "../firebase";
 
-export default Vue.extend({
-	name: "home",
-	methods: {
-		...mapActions(["signInAction", "signOutAction"])
-	},
-	computed: {
-		...mapGetters(["isAuthed", "userId"]),
-		currentUser() {
-			return auth.currentUser;
-		}
+import { User } from "../models";
+import { Skill } from "../models/typings";
+
+@Component
+export default class Home extends Vue {
+	// Mapped Store
+	@Getter isAuthed: boolean;
+	@Getter userId: string;
+	@Action signInAction: () => void;
+	@Action signOutAction: () => void;
+
+	get currentAuthUser() {
+		return auth.currentUser;
 	}
-});
+}
 </script>

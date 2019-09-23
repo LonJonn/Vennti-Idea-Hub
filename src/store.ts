@@ -1,10 +1,18 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { State } from "./types";
-
 import { auth } from "@/firebase";
 import firebase from "firebase/app";
+
+import { User } from "@/models";
+
+interface State {
+	auth: {
+		user: firebase.User;
+		status: string;
+		error: string;
+	};
+}
 
 Vue.use(Vuex);
 
@@ -24,6 +32,11 @@ export default new Vuex.Store({
 			if (!state.auth.user) return null;
 
 			return state.auth.user.uid;
+		},
+		userInstance: state => {
+			if (!state.auth.user) return null;
+
+			return new User(state.auth.user.uid);
 		},
 		isAuthed: state => {
 			return !!state.auth.user;
