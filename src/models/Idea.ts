@@ -4,7 +4,7 @@ import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import store from "@/store";
 
-export default class Idea extends BaseReference {
+export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	// Start Static
 	static all = db.collection("ideas");
 	static subscribe = Idea.all.onSnapshot;
@@ -46,43 +46,7 @@ export default class Idea extends BaseReference {
 	}
 	// End Static
 
-	private _data: IdeaData;
-
 	constructor(init?: string | fs.DocumentReference) {
 		super("ideas", init);
-	}
-
-	private checkInit() {
-		if (!this._data) {
-			throw new Error(`Idea not initialised.\nPlease call .init() on Idea instance.`);
-		}
-	}
-
-	get data() {
-		return this._data;
-	}
-
-	set data(payload: IdeaData) {
-		this.checkInit();
-
-		this.ref.set(payload);
-		this._data = payload;
-	}
-
-	async init() {
-		if (this._data) throw new Error(`${this.id}: Already initiated.`);
-
-		const doc = await this.ref.get();
-		this._data = doc.data() as IdeaData;
-
-		return this;
-	}
-
-	// Is there a better way to do this?
-	async update(newData: UpdateIdea) {
-		this.checkInit();
-
-		Object.assign(this._data, newData);
-		await super.update(newData);
 	}
 }
