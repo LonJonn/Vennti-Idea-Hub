@@ -8,7 +8,7 @@
 			<input v-model.number="ideaForm.timeEstimation[1]" placeholder="maximum hours" type="number" />
 		</div>
 		<button @click="createIdea" class="bg-blue-500 text-white px-6 py-1 rounded mt-3 mb-6">Add</button>
-		<AppIdea :idea="idea" v-for="(idea, idx) in ideas" :key="idx" />
+		<AppIdea :idea="idea" v-for="idea in ideas" :key="idea.id" />
 	</div>
 </template>
 
@@ -40,13 +40,10 @@ export default class About extends Vue {
 
 	// Hooks
 	async created() {
-		Idea.all
-			.where("owner", "==", this.user.ref)
-			.orderBy("createdOn", "desc")
-			.onSnapshot(ds => {
-				this.ideas = Idea.fromCollection(ds);
-				this.loading = false;
-			});
+		Idea.all.orderBy("createdOn", "desc").onSnapshot(ds => {
+			this.ideas = Idea.fromCollection(ds);
+			this.loading = false;
+		});
 	}
 
 	// Methods
