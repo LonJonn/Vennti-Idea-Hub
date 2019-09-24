@@ -46,7 +46,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	static async create(initData: NewIdea) {
 		const payload: IdeaData = {
 			...initData,
-			owner: store.getters.userInstance.ref,
+			owner: store.state.user.ref,
 			createdOn: fs.Timestamp.now(),
 			assigned: [],
 			likes: [],
