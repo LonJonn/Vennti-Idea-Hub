@@ -4,15 +4,19 @@ import router from "./router";
 import store from "./store";
 
 import "@/assets/css/tailwind.css";
-
-import { firestorePlugin } from "vuefire";
-Vue.use(firestorePlugin);
-
 import { auth } from "@/firebase";
+
 auth.setPersistence("local");
 
-const unsubscribe = auth.onAuthStateChanged(user => {
-	if (user) store.commit("setUser", user);
+import preloader from "@/assets/preloader";
+import { User } from "@/models";
+document.getElementById("app").appendChild(preloader);
+
+const unsubscribe = auth.onAuthStateChanged(async authAccount => {
+	if (authAccount) {
+		const user = await new User(authAccount.uid).init();
+		store.commit("setUser", { authAccount, user });
+	}
 
 	new Vue({
 		router,

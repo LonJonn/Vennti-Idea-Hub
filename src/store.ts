@@ -7,11 +7,8 @@ import firebase from "firebase/app";
 import { User } from "@/models";
 
 interface State {
-	auth: {
-		user: firebase.User;
-		status: string;
-		error: string;
-	};
+	authAccount: firebase.User;
+	user: User;
 }
 
 Vue.use(Vuex);
@@ -20,69 +17,54 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 export default new Vuex.Store({
 	state: {
-		auth: {
-			user: null,
-			status: null,
-			error: null
-		}
+		authAccount: null,
+		user: null
 	} as State,
 
 	getters: {
-		userId: state => {
-			if (!state.auth.user) return null;
-
-			return state.auth.user.uid;
-		},
-		userInstance: state => {
-			if (!state.auth.user) return null;
-
-			return new User(state.auth.user.uid);
-		},
-		isAuthed: state => {
-			return !!state.auth.user;
-		}
+		isAuthed: state => !!state.authAccount && !!state.user
 	},
 
 	mutations: {
-		setUser(state, payload) {
-			state.auth.user = payload;
+		setUser(state, payload: State): void {
+			state.authAccount = payload.authAccount;
+			state.user = payload.user;
 		},
-		removeUser(state) {
-			state.auth.user = null;
-		},
-		setAuthStatus(state, payload) {
-			state.auth.status = payload;
-		},
-		setAuthError(state, payload) {
-			state.auth.error = payload;
+		removeUser(state): void {
+			state.authAccount = null;
+			state.user = null;
 		}
 	},
 
 	actions: {
-		signInAction({ commit }) {
-			auth.signInWithPopup(googleProvider)
-				.then(res => {
-					commit("setUser", res.user);
-					commit("setAuthStatus", "success");
-					commit("setAuthError", null);
-				})
-				.catch(err => {
-					commit("setAuthStatus", "failure");
-					commit("setAuthError", err.message);
-				});
+		async signInAction({ commit }) {
+			try {
+				const res = await auth.signInWithPopup(googleProvider);
+
+				// Create account for new users
+				const user = await new User(res.user.uid).init();
+				if (!user.data)
+					user.data = {
+						commentsCount: 0,
+						name: res.user.displayName,
+						skills: []
+					};
+
+				const payload: State = {
+					authAccount: res.user,
+					user
+				};
+
+				commit("setUser", payload);
+			} catch (error) {
+				// console.error("Sign in failed.");
+				return;
+			}
 		},
 
-		signOutAction({ commit }) {
-			auth.signOut()
-				.then(() => {
-					commit("removeUser");
-					commit("setAuthStatus", "success");
-					commit("setAuthError", null);
-				})
-				.catch(err => {
-					commit("setAuthStatus", "failure");
-					commit("setAuthError", err.message);
-				});
+		async signOutAction({ commit }) {
+			await auth.signOut();
+			commit("removeUser");
 		}
 	}
 });

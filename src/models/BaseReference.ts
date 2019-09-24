@@ -44,8 +44,6 @@ export default abstract class BaseReference<T, U> {
 	 * However, Local instance is updated immediately and can be accessed via `data` property.
 	 */
 	set data(payload: T) {
-		this.checkInit();
-
 		this._ref.set(payload);
 		this._data = payload;
 	}
