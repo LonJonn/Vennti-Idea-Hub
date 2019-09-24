@@ -9,11 +9,10 @@
 			class="bg-blue-500 text-white px-3 py-2 rounded-lg mt-2"
 			@click="signInAction"
 		>Login</button>
-		<button
-			v-else
-			class="bg-red-500 text-white px-3 py-2 rounded-lg mt-2"
-			@click="signOutAction"
-		>Logout</button>
+		<div v-else>
+			<button class="bg-orange-500 text-white px-3 py-2 rounded-lg mt-2" @click="signOutAction">Logout</button>
+			<button class="bg-red-500 text-white px-3 py-2 rounded-lg mt-2" @click="deleteAccount">DELETE</button>
+		</div>
 	</div>
 </template>
 
@@ -30,5 +29,9 @@ export default class Home extends Vue {
 	@Getter isAuthed: boolean;
 	@Action signInAction: () => Promise<void>;
 	@Action signOutAction: () => Promise<void>;
+
+	deleteAccount() {
+		this.user.delete();
+	}
 }
 </script>

@@ -1,5 +1,7 @@
 import BaseReference from "./BaseReference";
 import { UserData, UpdateUser, Skill } from "./typings";
+import Idea from "./Idea";
+import store from "@/store";
 
 /**
  * If no intial value is passed, a *new* document reference will be created within the passed collection.
@@ -48,5 +50,13 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 		await this.update({
 			skills: this.data.skills.filter(skill => skill !== toRemove)
 		});
+	}
+
+	async delete() {
+		const cascade = await Idea.all.where("owner", "==", this.ref).get();
+		await Promise.all(cascade.docs.map(doc => doc.ref.delete()));
+		await super.delete();
+
+		store.dispatch("signOutAction");
 	}
 }
