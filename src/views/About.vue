@@ -16,20 +16,17 @@
 import { Component, Vue } from "vue-property-decorator";
 import AppIdea from "@/components/Idea.vue";
 
-import { mapGetters } from "vuex";
-
 import { User, Idea } from "@/models";
-import { db, auth } from "../firebase";
-import { NewIdea, Skill } from "../models/typings";
+import { NewIdea } from "@/models/typings";
 
-import { Getter } from "vuex-class";
+import { State } from "vuex-class";
 
 @Component({
 	components: { AppIdea }
 })
 export default class About extends Vue {
 	// Mapped Store
-	@Getter userInstance: User;
+	@State user: User;
 
 	// Data
 	loading: boolean = true;
@@ -44,7 +41,7 @@ export default class About extends Vue {
 	// Hooks
 	async created() {
 		Idea.all
-			.where("owner", "==", this.userInstance.ref)
+			.where("owner", "==", this.user.ref)
 			.orderBy("createdOn", "desc")
 			.onSnapshot(ds => {
 				this.ideas = Idea.fromCollection(ds);
