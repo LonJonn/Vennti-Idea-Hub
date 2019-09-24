@@ -21,6 +21,8 @@ import { NewIdea } from "@/models/typings";
 
 import { State } from "vuex-class";
 
+import { firestore as fs } from "firebase/app";
+
 @Component({
 	components: { AppIdea }
 })
@@ -44,6 +46,8 @@ export default class About extends Vue {
 			this.ideas = Idea.fromCollection(ds);
 			this.loading = false;
 		});
+		window.fsmelon = fs.FieldValue;
+		window.melon = await new User(this.user.id).init();
 	}
 
 	// Methods

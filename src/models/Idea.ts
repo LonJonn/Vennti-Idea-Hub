@@ -76,4 +76,16 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	constructor(init?: string | fs.DocumentReference) {
 		super("ideas", init);
 	}
+
+	like() {
+		this.update({
+			likes: fs.FieldValue.arrayUnion(store.state.user.ref)
+		});
+	}
+
+	unlike() {
+		this.update({
+			likes: fs.FieldValue.arrayRemove(store.state.user.ref)
+		});
+	}
 }

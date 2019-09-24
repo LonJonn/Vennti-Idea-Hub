@@ -54,4 +54,5 @@ export interface UpdateIdea {
 	status?: IdeaStatus;
 	skillsRequired?: Skill[];
 	timeEstimation?: [number, number];
+	likes?: fs.FieldValue;
 }

@@ -10,6 +10,8 @@
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ ownerName }}</li>
+			<button class="like" @click="idea.like()">Like</button>
+			<button class="like" @click="idea.unlike()">Unlike</button>
 			<button class="close" @click="idea.delete()">Delete</button>
 		</div>
 	</div>
@@ -50,7 +52,17 @@ export default class IdeaComponent extends Vue {
 	@apply capitalize;
 }
 
+.button {
+	@apply text-lg text-white font-semibold px-6 py-1 rounded mt-2;
+}
+
+.like {
+	@apply button;
+	@apply bg-green-500;
+}
+
 .close {
-	@apply bg-red-400 text-white text-lg font-semibold px-6 py-1 rounded mt-2;
+	@apply button;
+	@apply bg-red-400 float-right;
 }
 </style>
