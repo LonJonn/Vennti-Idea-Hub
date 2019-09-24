@@ -38,7 +38,7 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	}
 
 	/**
-	 * Removes skilsl from the user and writes to Firestore.
+	 * Removes skills from the user and writes to Firestore.
 	 * Throws an Error if skill is not known.
 	 * @param toRemove Skill to be removed - **must** be from `Skill` Enum
 	 * @requires src/models/typings
@@ -52,11 +52,14 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 		});
 	}
 
+	/**
+	 * Deletes user document in Firestore **AND** all associated Ideas.
+	 */
 	async delete() {
 		const cascade = await Idea.all.where("owner", "==", this.ref).get();
 		await Promise.all(cascade.docs.map(doc => doc.ref.delete()));
 		await super.delete();
 
-		store.dispatch("signOutAction");
+		await store.dispatch("signOutAction");
 	}
 }
