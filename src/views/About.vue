@@ -47,8 +47,6 @@ export default class About extends Vue {
 			this.ideas = Idea.fromCollection(ds);
 			this.loading = false;
 		});
-		window.fsmelon = fs.FieldValue;
-		window.melon = await new User(this.user.id).init();
 	}
 
 	destroyed() {

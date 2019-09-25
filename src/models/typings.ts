@@ -30,7 +30,7 @@ export interface UserData {
 
 export interface UpdateUser {
 	name?: string;
-	skills?: Skill[];
+	skills?: fs.FieldValue;
 }
 
 export interface NewIdea {
@@ -52,7 +52,7 @@ export interface UpdateIdea {
 	benefit?: string;
 	description?: string;
 	status?: IdeaStatus;
-	skillsRequired?: Skill[];
+	skillsRequired?: fs.FieldValue;
 	timeEstimation?: [number, number];
 	likes?: fs.FieldValue;
 }
