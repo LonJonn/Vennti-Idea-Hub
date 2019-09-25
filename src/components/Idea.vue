@@ -12,7 +12,6 @@
 			<button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button>
 			<button v-else class="like" @click="idea.unlike()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
-			{{ userHasLiked }}
 			{{ readableLikes }}
 		</div>
 	</div>
@@ -35,17 +34,23 @@ export default class IdeaComponent extends Vue {
 	// Data
 	loading: boolean = true;
 	owner: User = null;
-	readableLikes: string[] = null;
+	readableLikes: string = null;
 
 	// Hooks
-	async created() {
+	async mounted() {
 		this.owner = await new User(this.idea.data.owner).init();
 		this.loading = false;
 
-		this.idea.ref.onSnapshot(async ds => {
-			const likesProm = ds.data().likes.map(async ref => (await ref.get()).data().name);
-			this.readableLikes = await Promise.all(likesProm);
-		});
+		let noOfLikes = this.idea.data.likes.length - 1;
+		noOfLikes = noOfLikes < 0 ? 0 : noOfLikes;
+		const top3Likes = (await Promise.all(
+			this.idea.data.likes
+				.reverse()
+				.slice(0, 1)
+				.map(async userRef => (await userRef.get()).data().name)
+		)).join(", ");
+
+		this.readableLikes = `${top3Likes} ${noOfLikes ? `and ${noOfLikes} more` : ""}`;
 	}
 
 	destroyed() {

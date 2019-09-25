@@ -8,7 +8,7 @@
 			<input v-model.number="ideaForm.timeEstimation[1]" placeholder="maximum hours" type="number" />
 		</div>
 		<button @click="createIdea" class="bg-blue-500 text-white px-6 py-1 rounded mt-3 mb-6">Add</button>
-		<AppIdea :idea="idea" v-for="idea in ideas" :key="idea.id" />
+		<AppIdea :idea="idea" v-for="idea in ideas" :key="idea.id + idea.data.likes.length" />
 	</div>
 </template>
 
