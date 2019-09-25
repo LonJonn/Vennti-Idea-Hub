@@ -1,7 +1,6 @@
 <template>
 	<div class="mb-5">
-		<div v-if="loading" class="text-xl font-bold bg-blue-500 text-white">loading</div>
-		<div v-else-if="idea.data" class="list bg-gray-300 rounded text-blue-800 p-5">
+		<div class="list bg-gray-300 rounded text-blue-800 p-5">
 			<li>description: {{ idea.data.description }}</li>
 			<li>benefit: {{ idea.data.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>
@@ -12,7 +11,7 @@
 			<li>Owner: {{ ownerName }}</li>
 			<button class="like" @click="idea.like()">Like</button>
 			<button class="like" @click="idea.unlike()">Unlike</button>
-			<button class="close" @click="idea.delete()">Delete</button>
+			<button class="close" @click="deleteIdea()">Delete</button>
 		</div>
 	</div>
 </template>
@@ -24,25 +23,38 @@ import { Skill, IdeaStatus } from "@/models/typings";
 
 @Component
 export default class IdeaComponent extends Vue {
+	// Props
 	@Prop() idea: Idea;
 
-	loading: boolean = false;
+	// Data
 	owner: User = null;
 
+	// Hooks
 	async created() {
 		this.owner = await new User(this.idea.data.owner).init();
 	}
 
-	get ownerName() {
-		return this.owner ? this.owner.data.name : "Loading...";
+	destroyed() {
+		this.owner.unsubscribe();
 	}
 
+	// Methods
+	deleteIdea() {
+		this.idea.delete();
+		this.$destroy();
+	}
+
+	// Computed
 	get readableSkills() {
 		return this.idea.data.skillsRequired.map(skill => Skill[skill]).toString();
 	}
 
 	get readableStatus() {
 		return IdeaStatus[this.idea.data.status];
+	}
+
+	get ownerName() {
+		return this.owner && this.owner.data ? this.owner.data.name : "Loading...";
 	}
 }
 </script>

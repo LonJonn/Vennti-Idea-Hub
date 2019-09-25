@@ -30,6 +30,7 @@ export default class Home extends Vue {
 	@Action signInAction: () => Promise<void>;
 	@Action signOutAction: () => Promise<void>;
 
+	// Methods
 	deleteAccount() {
 		this.user.delete();
 	}

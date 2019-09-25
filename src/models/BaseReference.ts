@@ -2,6 +2,8 @@ import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 
 export default abstract class BaseReference<T, U> {
+	unsubscribe: () => void;
+
 	private _ref: fs.DocumentReference;
 	private _instanceOf: string;
 	protected _data: T;
@@ -64,29 +66,37 @@ export default abstract class BaseReference<T, U> {
 	}
 
 	/**
-	 * Method for populating instance `data` property *asynchronously*.
+	 * Creates internal listener for document changes on Firestore.
+	 * Resolves instance with populated `data` property which can be used immediately.
+	 * Remove listener with `.unsubscribe()`.
 	 *
-	 * Should be called when creating a new instance.
-	 * @example const instance = await new Reference(id).init();
-	 * @returns This instance
+	 * Document changes that occur after this point ***will affect `data` automatically***,
+	 * keeping the local instance in sync with the Firestore document.
+	 *
+	 * *SHOULD BE CALLED WHEN CREATING A NEW INSTANCE.*
+	 * ---
+	 * @example const idea = await new Idea(id).init();
 	 */
-	async init() {
+	init() {
 		if (this._data) throw new Error(`${this.id}: Already initiated.`);
 
-		const doc = await this._ref.get();
-		this._data = doc.data() as T;
-		return this;
+		return new Promise<this>(resolve => {
+			this.unsubscribe = this._ref.onSnapshot(ds => {
+				this._data = ds.data() as T;
+				resolve(this); // Resolve instance after initial fetch
+			});
+		});
 	}
 
 	/**
-	 * Writes updated data to the Firestore document;
-	 * however, local instance is updated immediately and can be accessed via `data` property.
+	 * Writes updated data to the Firestore document *asynchronously*.
+	 *
+	 * **await** the update to access local data immediately.
 	 * @param newData
 	 */
 	async update(newData: U) {
 		this.checkInit();
 
-		Object.assign(this._data, newData);
 		await this._ref.update(newData);
 	}
 
@@ -95,6 +105,8 @@ export default abstract class BaseReference<T, U> {
 	 * Instance should **NOT** be used after this method is called.
 	 */
 	async delete() {
+		if (this.unsubscribe) this.unsubscribe();
+
 		this._data = null;
 		await this._ref.delete();
 	}
