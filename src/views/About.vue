@@ -29,6 +29,7 @@ export default class About extends Vue {
 	@State user: User;
 
 	// Data
+	unsubscribe: () => void;
 	loading: boolean = true;
 	ideas: Idea[] = null;
 	ideaForm: NewIdea = {
@@ -40,10 +41,14 @@ export default class About extends Vue {
 
 	// Hooks
 	async created() {
-		Idea.all.orderBy("createdOn", "desc").onSnapshot(ds => {
+		this.unsubscribe = Idea.all.orderBy("createdOn", "desc").onSnapshot(ds => {
 			this.ideas = Idea.fromCollection(ds);
 			this.loading = false;
 		});
+	}
+
+	destroyed() {
+		this.unsubscribe();
 	}
 
 	// Methods
