@@ -13,7 +13,7 @@ export default abstract class BaseReference<T, U> {
 	 *
 	 * Throws an `Error` if instance is not initialised.
 	 */
-	protected checkInit() {
+	protected checkData() {
 		if (!this._data) {
 			const singular = this._instanceOf[0].toUpperCase() + this._instanceOf.slice(1, -1);
 			throw new Error(`${singular} instance not initialised.\nPlease call .init().`);
@@ -78,7 +78,7 @@ export default abstract class BaseReference<T, U> {
 	 * @example const idea = await new Idea(id).init();
 	 */
 	init() {
-		if (this._data) throw new Error(`${this.id}: Already initiated.`);
+		if (this.unsubscribe) throw new Error(`${this.id}: Already initiated.`);
 
 		return new Promise<this>(resolve => {
 			this.unsubscribe = this._ref.onSnapshot(ds => {
@@ -95,7 +95,7 @@ export default abstract class BaseReference<T, U> {
 	 * @param newData
 	 */
 	async update(newData: U) {
-		this.checkInit();
+		this.checkData();
 
 		await this._ref.update(newData);
 	}

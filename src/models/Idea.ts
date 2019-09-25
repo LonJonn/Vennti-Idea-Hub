@@ -77,14 +77,14 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		super("ideas", init);
 	}
 
-	like() {
-		this.update({
+	async like() {
+		await this.update({
 			likes: fs.FieldValue.arrayUnion(store.state.user.ref)
 		});
 	}
 
-	unlike() {
-		this.update({
+	async unlike() {
+		await this.update({
 			likes: fs.FieldValue.arrayRemove(store.state.user.ref)
 		});
 	}

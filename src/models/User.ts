@@ -31,9 +31,8 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async addSkill(newSkill: Skill) {
-		this.checkInit();
+		this.checkData();
 
-		if (this.data.skills.includes(newSkill)) throw new Error("User already has this skill.");
 		await this.update({
 			skills: fs.FieldValue.arrayUnion(newSkill)
 		});
@@ -46,9 +45,8 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async removeSkill(toRemove: Skill) {
-		this.checkInit();
+		this.checkData();
 
-		if (!this.data.skills.includes(toRemove)) throw new Error("User does not have that skill.");
 		await this.update({
 			skills: fs.FieldValue.arrayRemove(toRemove)
 		});
