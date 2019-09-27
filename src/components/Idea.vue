@@ -33,7 +33,7 @@ export default class IdeaComponent extends Vue {
 
 	// Data
 	loading: boolean = true;
-	handlers: (() => void)[] = [];
+	handlers: Array<() => void> = [];
 	ownerName: string = null;
 
 	likes$: () => void;
