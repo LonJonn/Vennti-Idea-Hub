@@ -5,14 +5,14 @@
 			<li>benefit: {{ idea.data.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>
 			<li>opened: {{ idea.data.createdOn.toDate() }}</li>
-			<li>likes: {{ idea.data.likes.length }}</li>
+			<li>likes: {{ likesCount }}</li>
 			<li>status: {{ readableStatus }}</li>
 			<br />
-			<li>Owner: {{ owner.data.name }}</li>
-			<button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button>
+			<li>Owner: {{ ownerName }}</li>
+			<button v-if="!userHasLiked" class="like" @click="idea.like(0)">Like</button>
 			<button v-else class="like" @click="idea.unlike()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
-			{{ readableLikes }}
+			{{ recentLikes }}
 		</div>
 	</div>
 </template>
@@ -33,28 +33,32 @@ export default class IdeaComponent extends Vue {
 
 	// Data
 	loading: boolean = true;
-	owner: User = null;
-	readableLikes: string = null;
+	handlers: (() => void)[] = [];
+	ownerName: string = null;
+
+	likes$: () => void;
+	recentLikes: string = null;
+	likesCount: number = null;
+	userHasLiked: boolean = null;
 
 	// Hooks
 	async mounted() {
-		this.owner = await new User(this.idea.data.owner).init();
+		this.ownerName = this.idea.data.owner.name;
 		this.loading = false;
 
-		let noOfLikes = this.idea.data.likes.length - 1;
-		noOfLikes = noOfLikes < 0 ? 0 : noOfLikes;
-		const top3Likes = (await Promise.all(
-			this.idea.data.likes
-				.reverse()
-				.slice(0, 1)
-				.map(async userRef => (await userRef.get()).data().name)
-		)).join(", ");
+		this.likes$ = this.idea.ref.collection("likes").onSnapshot(ds => {
+			this.likesCount = ds.size;
+			this.userHasLiked = ds.docs.some(likeDoc => likeDoc.id === this.user.id);
 
-		this.readableLikes = `${top3Likes} ${noOfLikes ? `and ${noOfLikes} more` : ""}`;
+			this.recentLikes = ds.docs
+				.slice(0, 3)
+				.map(doc => doc.data().name)
+				.toString();
+		});
 	}
 
 	destroyed() {
-		this.owner.unsubscribe();
+		this.likes$();
 	}
 
 	// Methods
@@ -70,10 +74,6 @@ export default class IdeaComponent extends Vue {
 
 	get readableStatus() {
 		return IdeaStatus[this.idea.data.status];
-	}
-
-	get userHasLiked() {
-		return this.idea.data.likes.some(ref => ref.id === this.user.id);
 	}
 }
 </script>

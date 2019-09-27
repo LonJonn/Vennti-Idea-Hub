@@ -41,10 +41,9 @@ export interface NewIdea {
 }
 
 export interface IdeaData extends NewIdea {
-	owner: fs.DocumentReference;
+	owner: { ref: fs.DocumentReference; name: string };
 	createdOn: firebase.firestore.Timestamp;
 	assigned: fs.DocumentReference[];
-	likes: fs.DocumentReference[];
 	status: IdeaStatus;
 }
 

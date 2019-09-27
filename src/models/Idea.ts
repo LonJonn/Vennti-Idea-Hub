@@ -46,10 +46,12 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	static async create(initData: NewIdea) {
 		const payload: IdeaData = {
 			...initData,
-			owner: store.state.user.ref,
+			owner: {
+				ref: store.state.user.ref,
+				name: store.state.user.data.name
+			},
 			createdOn: fs.Timestamp.now(),
 			assigned: [],
-			likes: [],
 			status: IdeaStatus.Open
 		};
 
@@ -77,15 +79,20 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		super("ideas", init);
 	}
 
-	async like() {
-		await this.update({
-			likes: fs.FieldValue.arrayUnion(store.state.user.ref)
-		});
+	async like(likeType: number) {
+		await this.ref
+			.collection("likes")
+			.doc(store.state.user.id)
+			.set({
+				name: store.state.user.data.name,
+				type: likeType
+			});
 	}
 
 	async unlike() {
-		await this.update({
-			likes: fs.FieldValue.arrayRemove(store.state.user.ref)
-		});
+		await this.ref
+			.collection("likes")
+			.doc(store.state.user.id)
+			.delete();
 	}
 }

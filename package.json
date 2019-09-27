@@ -10,6 +10,8 @@
 	"dependencies": {
 		"core-js": "^2.6.5",
 		"firebase": "^6.6.0",
+		"rxfire": "^3.8.3",
+		"rxjs": "^6.5.3",
 		"tailwindcss": "^1.1.2",
 		"vue": "^2.6.10",
 		"vue-property-decorator": "^8.2.2",

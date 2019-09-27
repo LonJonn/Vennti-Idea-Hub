@@ -37,7 +37,3 @@ export const aggregateIdeaOwner = functions.firestore
 			batch.commit();
 		}
 	});
-
-export const aggregateRecentIdeaLikes = functions.firestore
-	.document("ideas/{ideaId}")
-	.onWrite(async ({ before, after }) => {});
