@@ -3,6 +3,7 @@ import { IdeaData, UpdateIdea, NewIdea, IdeaStatus } from "./typings";
 import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import store from "@/store";
+import Likes from "./Likes";
 
 export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	// Start Static
@@ -52,8 +53,8 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 			},
 			createdOn: fs.Timestamp.now(),
 			assigned: [],
-			likes: [],
-			status: IdeaStatus.Open
+			status: IdeaStatus.Open,
+			likesCount: 0
 		};
 
 		// Check for negative or out of order range
@@ -80,26 +81,16 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		super("ideas", init);
 	}
 
-	async like(value: 1 | -1) {
-		const { user } = store.state;
+	async delete() {
+		await new Likes(this.id).delete();
+		await super.delete();
+	}
 
-		await this.update({
-			likes: fs.FieldValue.arrayUnion({
-				ref: user.ref,
-				name: user.data.name,
-				value
-			})
-		});
+	async like() {
+		await new Likes(this.id).addUserLike();
 	}
 
 	async unlike() {
-		const { user } = store.state;
-
-		await this.update({
-			likes: fs.FieldValue.arrayRemove(
-				// Find object of current user in likes array
-				this.data.likes.filter(like => like.ref.id === user.id)[0]
-			)
-		});
+		await new Likes(this.id).removeUserLike();
 	}
 }

@@ -49,15 +49,8 @@ export interface IdeaData extends NewIdea {
 	owner: { ref: fs.DocumentReference; name: string };
 	assigned: Array<{ ref: fs.DocumentReference; name: string; dateAssigned: fs.Timestamp }>;
 	status: IdeaStatus;
-	likes: Array<{ ref: fs.DocumentReference; name: string; value: 1 | -1 }>;
-	// likes: {
-	// 	[userId: string]: {
-	// 		ref: fs.DocumentReference;
-	// 		name: string;
-	// 		value: 1 | -1;
-	// 	};
-	// };
 	createdOn: firebase.firestore.Timestamp;
+	likesCount: number;
 }
 
 export interface UpdateIdea {
@@ -66,5 +59,12 @@ export interface UpdateIdea {
 	status?: IdeaStatus;
 	skillsRequired?: fs.FieldValue;
 	timeEstimation?: [number, number];
-	likes?: fs.FieldValue;
+}
+
+// Likes
+
+export interface Like {
+	ref: fs.DocumentReference;
+	name: string;
+	modifiedAt: fs.Timestamp;
 }

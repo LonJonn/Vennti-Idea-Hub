@@ -5,11 +5,11 @@
 			<li>benefit: {{ idea.data.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>
 			<li>opened: {{ idea.data.createdOn.toDate() }}</li>
-			<li>likes: {{ idea.data.likes.length }}</li>
+			<li>likes: {{ idea.data.likesCount }}</li>
 			<li>status: {{ readableStatus }}</li>
 			<br />
-			<li>Owner: {{ ownerName }}</li>
-			<button v-if="!userHasLiked" class="like" @click="idea.like(1)">Like</button>
+			<li>Owner: {{ this.idea.data.owner.name }}</li>
+			<button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button>
 			<button v-else class="like" @click="idea.unlike()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
 			{{ recentLikes }}
@@ -20,8 +20,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { User, Idea } from "@/models";
-import { Skill, IdeaStatus } from "@/models/typings";
+import { Skill, IdeaStatus, Like } from "@/models/typings";
 import { State } from "vuex-class";
+import { db } from "../firebase";
+import Likes from "../models/Likes";
 
 @Component
 export default class IdeaComponent extends Vue {
@@ -33,11 +35,12 @@ export default class IdeaComponent extends Vue {
 
 	// Data
 	loading: boolean = true;
-	ownerName: string = null;
+	likes: Likes = null;
 
 	// Hooks
 	async mounted() {
-		this.ownerName = this.idea.data.owner.name;
+		this.likes = await new Likes(this.idea.id).init();
+
 		this.loading = false;
 	}
 
@@ -58,17 +61,15 @@ export default class IdeaComponent extends Vue {
 	}
 
 	get recentLikes() {
-		return this.idea.data.likes
+		return this.likes.ids
 			.reverse()
 			.slice(0, 2)
-			.map(like => {
-				return like.ref.id === this.user.id ? "You" : like.name;
-			})
+			.map(id => this.likes.data[id].name)
 			.join(", ");
 	}
 
 	get userHasLiked() {
-		return this.idea.data.likes.some(like => like.ref.id === this.user.id);
+		return this.likes.ids.some(id => id === this.user.id);
 	}
 }
 </script>
