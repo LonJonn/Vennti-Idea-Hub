@@ -1,5 +1,6 @@
-import User from "./User";
 import { firestore as fs } from "firebase/app";
+
+// Enums
 
 export enum Skill {
 	Technical,
@@ -22,6 +23,8 @@ export enum IdeaDifficulty {
 	Hard
 }
 
+// User
+
 export interface UserData {
 	name: string;
 	skills: Skill[];
@@ -33,6 +36,8 @@ export interface UpdateUser {
 	skills?: fs.FieldValue;
 }
 
+// Idea
+
 export interface NewIdea {
 	benefit: string;
 	description: string;
@@ -42,9 +47,17 @@ export interface NewIdea {
 
 export interface IdeaData extends NewIdea {
 	owner: { ref: fs.DocumentReference; name: string };
-	createdOn: firebase.firestore.Timestamp;
-	assigned: fs.DocumentReference[];
+	assigned: Array<{ ref: fs.DocumentReference; name: string; dateAssigned: fs.Timestamp }>;
 	status: IdeaStatus;
+	likes: Array<{ ref: fs.DocumentReference; name: string; value: 1 | -1 }>;
+	// likes: {
+	// 	[userId: string]: {
+	// 		ref: fs.DocumentReference;
+	// 		name: string;
+	// 		value: 1 | -1;
+	// 	};
+	// };
+	createdOn: firebase.firestore.Timestamp;
 }
 
 export interface UpdateIdea {

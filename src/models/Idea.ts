@@ -52,6 +52,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 			},
 			createdOn: fs.Timestamp.now(),
 			assigned: [],
+			likes: [],
 			status: IdeaStatus.Open
 		};
 
@@ -79,20 +80,26 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		super("ideas", init);
 	}
 
-	async like(likeType: number) {
-		await this.ref
-			.collection("likes")
-			.doc(store.state.user.id)
-			.set({
-				name: store.state.user.data.name,
-				type: likeType
-			});
+	async like(value: 1 | -1) {
+		const { user } = store.state;
+
+		await this.update({
+			likes: fs.FieldValue.arrayUnion({
+				ref: user.ref,
+				name: user.data.name,
+				value
+			})
+		});
 	}
 
 	async unlike() {
-		await this.ref
-			.collection("likes")
-			.doc(store.state.user.id)
-			.delete();
+		const { user } = store.state;
+
+		await this.update({
+			likes: fs.FieldValue.arrayRemove(
+				// Find object of current user in likes array
+				this.data.likes.filter(like => like.ref.id === user.id)[0]
+			)
+		});
 	}
 }

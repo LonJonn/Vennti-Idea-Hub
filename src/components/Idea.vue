@@ -1,15 +1,15 @@
 <template>
 	<div class="mb-5">
-		<div v-if="!loading" class="list bg-gray-300 rounded text-blue-800 p-5">
+		<div v-if="!loading && idea.data" class="list bg-gray-300 rounded text-blue-800 p-5">
 			<li>description: {{ idea.data.description }}</li>
 			<li>benefit: {{ idea.data.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>
 			<li>opened: {{ idea.data.createdOn.toDate() }}</li>
-			<li>likes: {{ likesCount }}</li>
+			<li>likes: {{ idea.data.likes.length }}</li>
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ ownerName }}</li>
-			<button v-if="!userHasLiked" class="like" @click="idea.like(0)">Like</button>
+			<button v-if="!userHasLiked" class="like" @click="idea.like(1)">Like</button>
 			<button v-else class="like" @click="idea.unlike()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
 			{{ recentLikes }}
@@ -33,47 +33,42 @@ export default class IdeaComponent extends Vue {
 
 	// Data
 	loading: boolean = true;
-	handlers: Array<() => void> = [];
 	ownerName: string = null;
-
-	likes$: () => void;
-	recentLikes: string = null;
-	likesCount: number = null;
-	userHasLiked: boolean = null;
 
 	// Hooks
 	async mounted() {
 		this.ownerName = this.idea.data.owner.name;
 		this.loading = false;
-
-		this.likes$ = this.idea.ref.collection("likes").onSnapshot(ds => {
-			this.likesCount = ds.size;
-			this.userHasLiked = ds.docs.some(likeDoc => likeDoc.id === this.user.id);
-
-			this.recentLikes = ds.docs
-				.slice(0, 3)
-				.map(doc => doc.data().name)
-				.toString();
-		});
-	}
-
-	destroyed() {
-		this.likes$();
 	}
 
 	// Methods
 	deleteIdea() {
-		this.idea.delete();
-		this.$destroy();
+		if (confirm("Are you sure?")) {
+			this.idea.delete();
+		}
 	}
 
 	// Computed
 	get readableSkills() {
-		return this.idea.data.skillsRequired.map(skill => Skill[skill]).toString();
+		return this.idea.data.skillsRequired.map(skill => Skill[skill]).join(", ");
 	}
 
 	get readableStatus() {
 		return IdeaStatus[this.idea.data.status];
+	}
+
+	get recentLikes() {
+		return this.idea.data.likes
+			.reverse()
+			.slice(0, 2)
+			.map(like => {
+				return like.ref.id === this.user.id ? "You" : like.name;
+			})
+			.join(", ");
+	}
+
+	get userHasLiked() {
+		return this.idea.data.likes.some(like => like.ref.id === this.user.id);
 	}
 }
 </script>
