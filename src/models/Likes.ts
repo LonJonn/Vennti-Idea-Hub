@@ -9,6 +9,8 @@ interface LikeMap {
 }
 
 export default class Likes {
+	static all = db.collection("likes");
+
 	private _data: LikeMap;
 	private _ref: fs.DocumentReference;
 	private _id: string;
@@ -53,7 +55,7 @@ export default class Likes {
 					[user.id]: {
 						ref: user.ref,
 						name: user.data.name,
-						modifiedAt: fs.Timestamp.now()
+						createdAt: fs.Timestamp.now()
 					} as Like
 				},
 				{ merge: true }
@@ -102,6 +104,6 @@ export default class Likes {
 
 	get latest() {
 		if (!this._data) return [];
-		return sortBy(Object.values(this._data), like => -like.modifiedAt.toDate());
+		return sortBy(Object.values(this._data), like => -like.createdAt.toDate());
 	}
 }

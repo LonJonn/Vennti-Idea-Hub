@@ -53,13 +53,10 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	}
 
 	/**
-	 * Deletes user document in Firestore **AND** all associated Ideas.
+	 * Deletes user document in Firestore **AND** all associated Documents (via cloud function).
 	 */
 	async delete() {
-		const cascade = await Idea.all.where("owner", "==", this.ref).get();
-		await Promise.all(cascade.docs.map(doc => doc.ref.delete()));
 		await super.delete();
-
 		await store.dispatch("signOutAction");
 	}
 }

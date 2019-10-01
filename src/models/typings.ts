@@ -66,5 +66,5 @@ export interface UpdateIdea {
 export interface Like {
 	ref: fs.DocumentReference;
 	name: string;
-	modifiedAt: fs.Timestamp;
+	createdAt: fs.Timestamp;
 }

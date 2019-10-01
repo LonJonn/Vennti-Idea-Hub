@@ -1,32 +1,49 @@
-// import * as functions from "firebase-functions";
-// import * as admin from "firebase-admin";
-// admin.initializeApp(functions.config().firebase);
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+admin.initializeApp(functions.config().firebase);
 
-// export const aggregateIdeaOwner = functions.firestore
-// 	.document("users/{userId}")
-// 	.onWrite(async ({ before, after }) => {
-// 		const sameName = before.exists && before.data()!.name == after.data()!.name;
+const db = admin.firestore();
 
-// 		if (!sameName) {
-// 			const qs = await admin
-// 				.firestore()
-// 				.collection("ideas")
-// 				.where("owner.ref", "==", after.ref)
-// 				.get();
+export const userDeleteSync = functions.firestore
+	.document("users/{userId}")
+	.onDelete(async user => {
+		// Get all user ideas
+		const ideasToDelete = await db
+			.collection("ideas")
+			.where("owner.ref", "==", user.ref)
+			.get();
 
-// 			const ownerIdeaRefs = qs.docs.map(doc => doc.ref);
+		// Get each like bucket document for each idea
+		const likesToDelete = await Promise.all(
+			ideasToDelete.docs.map(ideaQs =>
+				db
+					.collection("likes")
+					.doc(ideaQs.id)
+					.get()
+			)
+		);
 
-// 			const batch = admin.firestore().batch();
+		// Delete user idea and its corresponding like bucket
+		await Promise.all(ideasToDelete.docs.map(idea => idea.ref.delete()));
+		await Promise.all(likesToDelete.map(like => like.ref.delete()));
 
-// 			ownerIdeaRefs.forEach(ideaRef =>
-// 				batch.update(ideaRef, {
-// 					owner: {
-// 						name: after.data()!.name,
-// 						ref: after.ref
-// 					}
-// 				})
-// 			);
+		// Get all like buckets where user has liked
+		const likesToRemove = await db
+			.collection("likes")
+			.orderBy(user.id)
+			.get();
 
-// 			batch.commit();
-// 		}
-// 	});
+		// For each like bucket
+		likesToRemove.docs.forEach(like => {
+			// Delete user map
+			like.ref.update({
+				[user.id]: admin.firestore.FieldValue.delete()
+			});
+			// Decrement idea like count of corresponding like bucket
+			db.collection("ideas")
+				.doc(like.id)
+				.update({
+					likesCount: admin.firestore.FieldValue.increment(-1)
+				});
+		});
+	});
