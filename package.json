@@ -10,6 +10,7 @@
 	"dependencies": {
 		"core-js": "^2.6.5",
 		"firebase": "^6.6.0",
+		"lodash": "^4.17.15",
 		"rxfire": "^3.8.3",
 		"rxjs": "^6.5.3",
 		"tailwindcss": "^1.1.2",
@@ -20,6 +21,7 @@
 		"vuex-class": "^0.3.2"
 	},
 	"devDependencies": {
+		"@types/lodash": "^4.14.141",
 		"@vue/cli-plugin-babel": "^3.11.0",
 		"@vue/cli-plugin-typescript": "^3.11.0",
 		"@vue/cli-service": "^3.11.0",

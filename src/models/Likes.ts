@@ -2,6 +2,7 @@ import { firestore as fs } from "firebase/app";
 import { db } from "@/firebase";
 import { Like } from "./typings";
 import store from "@/store";
+import { sortBy } from "lodash";
 
 interface LikeMap {
 	[id: string]: Like;
@@ -35,7 +36,6 @@ export default class Likes {
 
 		return new Promise<this>(resolve => {
 			this.unsubscribe = this._ref.onSnapshot(ds => {
-				console.log(ds);
 				this._data = ds.data() as LikeMap;
 				resolve(this); // Resolve instance after initial fetch
 			});
@@ -98,5 +98,10 @@ export default class Likes {
 
 	get count() {
 		return this.ids.length;
+	}
+
+	get latest() {
+		if (!this._data) return [];
+		return sortBy(Object.values(this._data), like => -like.modifiedAt.toDate());
 	}
 }

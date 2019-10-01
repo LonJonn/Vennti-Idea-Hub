@@ -1,9 +1,9 @@
 import BaseReference from "./BaseReference";
 import { IdeaData, UpdateIdea, NewIdea, IdeaStatus } from "./typings";
+import { Likes } from "./";
 import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import store from "@/store";
-import Likes from "./Likes";
 
 export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	// Start Static

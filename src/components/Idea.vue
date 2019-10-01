@@ -23,7 +23,7 @@ import { User, Idea } from "@/models";
 import { Skill, IdeaStatus, Like } from "@/models/typings";
 import { State } from "vuex-class";
 import { db } from "../firebase";
-import Likes from "../models/Likes";
+import { Likes } from "../models";
 
 @Component
 export default class IdeaComponent extends Vue {
@@ -61,10 +61,9 @@ export default class IdeaComponent extends Vue {
 	}
 
 	get recentLikes() {
-		return this.likes.ids
-			.reverse()
-			.slice(0, 2)
-			.map(id => this.likes.data[id].name)
+		return this.likes.latest
+			.splice(0, 2)
+			.map(like => (like.ref.id === this.user.id ? "You" : like.name))
 			.join(", ");
 	}
 
