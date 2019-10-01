@@ -3,6 +3,8 @@ import { UserData, UpdateUser, Skill } from "./typings";
 import Idea from "./Idea";
 import store from "@/store";
 
+import { firestore as fs } from "firebase/app";
+
 /**
  * If no intial value is passed, a *new* document reference will be created within the passed collection.
  *
@@ -29,11 +31,10 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async addSkill(newSkill: Skill) {
-		this.checkInit();
+		this.checkData();
 
-		if (this.data.skills.includes(newSkill)) throw new Error("User already has this skill.");
 		await this.update({
-			skills: [...this.data.skills, newSkill]
+			skills: fs.FieldValue.arrayUnion(newSkill)
 		});
 	}
 
@@ -44,11 +45,10 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async removeSkill(toRemove: Skill) {
-		this.checkInit();
+		this.checkData();
 
-		if (!this.data.skills.includes(toRemove)) throw new Error("User does not have that skill.");
 		await this.update({
-			skills: this.data.skills.filter(skill => skill !== toRemove)
+			skills: fs.FieldValue.arrayRemove(toRemove)
 		});
 	}
 

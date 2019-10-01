@@ -21,6 +21,8 @@ import { NewIdea } from "@/models/typings";
 
 import { State } from "vuex-class";
 
+import { firestore as fs } from "firebase/app";
+
 @Component({
 	components: { AppIdea }
 })

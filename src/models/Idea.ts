@@ -1,5 +1,6 @@
 import BaseReference from "./BaseReference";
 import { IdeaData, UpdateIdea, NewIdea, IdeaStatus } from "./typings";
+import { Likes } from "./";
 import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import store from "@/store";
@@ -46,11 +47,14 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	static async create(initData: NewIdea) {
 		const payload: IdeaData = {
 			...initData,
-			owner: store.state.user.ref,
+			owner: {
+				ref: store.state.user.ref,
+				name: store.state.user.data.name
+			},
 			createdOn: fs.Timestamp.now(),
 			assigned: [],
-			likes: [],
-			status: IdeaStatus.Open
+			status: IdeaStatus.Open,
+			likesCount: 0
 		};
 
 		// Check for negative or out of order range
@@ -75,5 +79,18 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	 */
 	constructor(init?: string | fs.DocumentReference) {
 		super("ideas", init);
+	}
+
+	async delete() {
+		await new Likes(this.id).delete();
+		await super.delete();
+	}
+
+	async like() {
+		await new Likes(this.id).addUserLike();
+	}
+
+	async unlike() {
+		await new Likes(this.id).removeUserLike();
 	}
 }

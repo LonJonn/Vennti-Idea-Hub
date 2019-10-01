@@ -32,6 +32,7 @@ export default new Vuex.Store({
 		},
 		removeUser(state): void {
 			state.authAccount = null;
+			state.user.unsubscribe();
 			state.user = null;
 		}
 	},
