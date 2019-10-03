@@ -44,7 +44,7 @@ export default class Likes {
 		});
 	}
 
-	async addUserLike() {
+	async add() {
 		const { user } = store.state;
 
 		await db
@@ -66,7 +66,7 @@ export default class Likes {
 			.commit();
 	}
 
-	async removeUserLike() {
+	async remove() {
 		const { user } = store.state;
 
 		await db

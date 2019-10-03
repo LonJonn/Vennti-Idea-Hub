@@ -1,5 +1,5 @@
 import BaseReference from "./BaseReference";
-import { IdeaData, UpdateIdea, NewIdea, IdeaStatus } from "./typings";
+import { IdeaData, UpdateIdea, NewIdea, IdeaStatus, Like } from "./typings";
 import { Likes } from "./";
 import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
@@ -71,6 +71,8 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	}
 	// End Static
 
+	likes: Likes;
+
 	/**
 	 * If no intial value is passed, a *new* document reference will be created within the ideas collection.
 	 *
@@ -79,18 +81,11 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	 */
 	constructor(init?: string | fs.DocumentReference) {
 		super("ideas", init);
+		this.likes = new Likes(this.id);
 	}
 
-	async delete() {
-		await new Likes(this.id).delete();
-		await super.delete();
-	}
-
-	async like() {
-		await new Likes(this.id).addUserLike();
-	}
-
-	async unlike() {
-		await new Likes(this.id).removeUserLike();
+	async init() {
+		await this.likes.init();
+		return await super.init();
 	}
 }
