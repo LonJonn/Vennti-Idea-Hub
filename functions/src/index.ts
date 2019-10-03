@@ -6,44 +6,48 @@ const db = admin.firestore();
 
 export const userDeleteSync = functions.firestore
 	.document("users/{userId}")
-	.onDelete(async user => {
-		// Get all user ideas
-		const ideasToDelete = await db
+	.onDelete(async deletedUser => {
+		/**
+		 * *Batch #1*
+		 * **Removing User Ideas and corresponding Like buckets**
+		 */
+		// Get all User Idea refs
+		const ideasToDelete = (await await db
 			.collection("ideas")
-			.where("owner.ref", "==", user.ref)
-			.get();
+			.where("owner.ref", "==", deletedUser.ref)
+			.get()).docs.map(doc => doc.ref);
 
-		// Get each like bucket document for each idea
-		const likesToDelete = await Promise.all(
-			ideasToDelete.docs.map(ideaQs =>
-				db
-					.collection("likes")
-					.doc(ideaQs.id)
-					.get()
-			)
-		);
+		// Get each Like Bucket ref for each Idea
+		const likesToDelete = ideasToDelete.map(ideaDoc => db.collection("likes").doc(ideaDoc.id));
 
-		// Delete user idea and its corresponding like bucket
-		await Promise.all(ideasToDelete.docs.map(idea => idea.ref.delete()));
-		await Promise.all(likesToDelete.map(like => like.ref.delete()));
+		// Delete User Ideas and corresponding Like buckets
+		const batchDelete = db.batch();
+		ideasToDelete.map(ideaRef => batchDelete.delete(ideaRef));
+		likesToDelete.map(likesRef => batchDelete.delete(likesRef));
+		batchDelete.commit();
 
-		// Get all like buckets where user has liked
-		const likesToRemove = await db
+		/**
+		 * *Batch #2*
+		 * **Removing User likes from other users Ideas**
+		 */
+		// Get all Like Buckets where User has liked
+		const likesToRemove = (await db
 			.collection("likes")
-			.orderBy(user.id)
-			.get();
+			.orderBy(deletedUser.id)
+			.get()).docs.map(likeBucketDoc => likeBucketDoc.ref);
 
-		// For each like bucket
-		likesToRemove.docs.forEach(like => {
-			// Delete user map
-			like.ref.update({
-				[user.id]: admin.firestore.FieldValue.delete()
+		const batchRemoveLike = db.batch();
+		// For each Like Bucket
+		likesToRemove.forEach(likeBucket => {
+			const ideaRef = db.collection("ideas").doc(likeBucket.id);
+			// Delete User map
+			batchRemoveLike.update(likeBucket, {
+				[deletedUser.id]: admin.firestore.FieldValue.delete()
 			});
-			// Decrement idea like count of corresponding like bucket
-			db.collection("ideas")
-				.doc(like.id)
-				.update({
-					likesCount: admin.firestore.FieldValue.increment(-1)
-				});
+			// Decrement Idea `ikeCount of corresponding Like Bucket
+			batchRemoveLike.update(ideaRef, {
+				likesCount: admin.firestore.FieldValue.increment(-1)
+			});
 		});
+		batchRemoveLike.commit();
 	});
