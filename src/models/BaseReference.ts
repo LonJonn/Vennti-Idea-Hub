@@ -2,23 +2,11 @@ import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 
 export default abstract class BaseReference<T, U> {
-	unsubscribe: () => void;
+	unsubscribe: () => void; // For manually unsubscribing
 
 	private _ref: fs.DocumentReference;
 	private _instanceOf: string;
 	protected _data: T;
-
-	/**
-	 * Helper function to be used internally.
-	 *
-	 * Throws an `Error` if instance is not initialised.
-	 */
-	protected checkData() {
-		if (!this._data) {
-			const singular = this._instanceOf[0].toUpperCase() + this._instanceOf.slice(1, -1);
-			throw new Error(`${singular} instance not initialised.\nPlease call .init().`);
-		}
-	}
 
 	constructor(collection: string, init?: string | fs.DocumentReference) {
 		this._instanceOf = collection;
@@ -91,18 +79,18 @@ export default abstract class BaseReference<T, U> {
 	/**
 	 * Writes updated data to the Firestore document *asynchronously*.
 	 *
-	 * **await** the update to access local data immediately.
+	 * **await** the update to access updated local instance.
 	 * @param newData
 	 */
 	async update(newData: U) {
-		this.checkData();
-
 		await this._ref.update(newData);
 	}
 
 	/**
-	 * Deletes document on Firestore **AND** sets `data` to null.
-	 * Instance should **NOT** be used after this method is called.
+	 * Deletes document on Firestore, unsubscribes and sets `data` to null.
+	 *
+	 * *Instance should NOT be used after this method is called.*
+	 * ---
 	 */
 	async delete() {
 		if (this.unsubscribe) this.unsubscribe();
