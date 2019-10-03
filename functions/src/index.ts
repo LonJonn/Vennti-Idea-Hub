@@ -24,7 +24,8 @@ export const userDeleteSync = functions.firestore
 		const batchDelete = db.batch();
 		ideasToDelete.map(ideaRef => batchDelete.delete(ideaRef));
 		likesToDelete.map(likesRef => batchDelete.delete(likesRef));
-		batchDelete.commit();
+		await batchDelete.commit();
+		console.info("User Ideas and corresponding Like Buckets deleted");
 
 		/**
 		 * *Batch #2*
@@ -49,5 +50,9 @@ export const userDeleteSync = functions.firestore
 				likesCount: admin.firestore.FieldValue.increment(-1)
 			});
 		});
-		batchRemoveLike.commit();
+		await batchRemoveLike.commit();
+		console.info("User likes removed");
+
+		// Once Finished
+		console.info("User delete completed");
 	});
