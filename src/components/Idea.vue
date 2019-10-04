@@ -8,7 +8,8 @@
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ idea.data.owner.name }}</li>
-			<AppLikes :id="idea.id" />
+			<AppLikes :ideaId="idea.id" />
+			<button class="close" @click="deleteIdea()">Delete</button>
 		</div>
 	</div>
 </template>
@@ -16,12 +17,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AppLikes from "@/components/Likes.vue";
+import { State } from "vuex-class";
 
 import { User, Idea } from "@/models";
-import { Skill, IdeaStatus, Like } from "@/models/typings";
-import { State } from "vuex-class";
-import { db } from "../firebase";
-import { Likes } from "../models";
+import { Skill, IdeaStatus } from "@/models/typings";
 
 @Component({ components: { AppLikes } })
 export default class IdeaComponent extends Vue {
@@ -54,12 +53,18 @@ export default class IdeaComponent extends Vue {
 	@apply capitalize;
 }
 
-.button {
+.app-button {
 	@apply text-lg text-white font-semibold px-6 py-1 rounded mt-2;
 }
 
+.like {
+	@apply app-button;
+	@apply bg-green-500;
+}
+
 .close {
-	@apply button;
-	@apply bg-red-400 float-right;
+	@apply app-button;
+	@apply bg-red-400;
+	@apply float-right;
 }
 </style>
