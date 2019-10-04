@@ -9,8 +9,8 @@
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ this.idea.data.owner.name }}</li>
-			<button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button>
-			<button v-else class="like" @click="idea.unlike()">Unlike</button>
+			<button v-if="!userHasLiked" class="like" @click="likes.add()">Like</button>
+			<button v-else class="like" @click="likes.remove()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
 			{{ recentLikes }}
 		</div>
@@ -61,14 +61,14 @@ export default class IdeaComponent extends Vue {
 	}
 
 	get recentLikes() {
-		return this.likes.latest
+		return this.likes.byLatest
 			.splice(0, 2)
 			.map(like => (like.ref.id === this.user.id ? "You" : like.name))
 			.join(", ");
 	}
 
 	get userHasLiked() {
-		return this.likes.ids.some(id => id === this.user.id);
+		return this.likes.userIds.some(id => id === this.user.id);
 	}
 }
 </script>

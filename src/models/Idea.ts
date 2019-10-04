@@ -80,9 +80,4 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	constructor(init?: string | fs.DocumentReference) {
 		super("ideas", init);
 	}
-
-	async delete() {
-		await new Likes(this.id).delete();
-		await super.delete();
-	}
 }
