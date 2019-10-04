@@ -21,7 +21,7 @@ export default class LikesComponent extends Vue {
 	// Props
 	@Prop() id: string;
 
-	likes: Likes;
+	likes: Likes = null;
 	loading = true;
 
 	// Lifecycle
