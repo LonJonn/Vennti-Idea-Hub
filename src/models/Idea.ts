@@ -1,8 +1,7 @@
-import BaseReference from "./BaseReference";
-import { IdeaData, UpdateIdea, NewIdea, IdeaStatus } from "./typings";
-import { Likes } from "./";
 import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
+import BaseReference from "./BaseReference";
+import { IdeaData, IdeaStatus, NewIdea, UpdateIdea } from "./typings";
 import store from "@/store";
 
 export default class Idea extends BaseReference<IdeaData, UpdateIdea> {

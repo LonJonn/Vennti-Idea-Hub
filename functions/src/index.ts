@@ -56,3 +56,11 @@ export const userDeleteSync = functions.firestore
 		// Once Finished
 		console.info("User delete completed");
 	});
+
+export const ideaDeleteSync = functions.firestore
+	.document("ideas/{ideaId}")
+	.onDelete(deletedIdea => {
+		db.collection("likes")
+			.doc(deletedIdea.ref.id)
+			.delete();
+	});

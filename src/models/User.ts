@@ -1,18 +1,8 @@
 import BaseReference from "./BaseReference";
 import { UserData, UpdateUser, Skill } from "./typings";
-import Idea from "./Idea";
-import store from "@/store";
 
 import { firestore as fs } from "firebase/app";
 
-/**
- * If no intial value is passed, a *new* document reference will be created within the passed collection.
- *
- * Instance is **NOT** written to Firestore until calling `.ref.set` *OR* setting the `data` property.
- * @classdesc
- * @param collection The target Firestore collection (e.g. "ideas")
- * @param init Optional param for existing documents
- */
 export default class User extends BaseReference<UserData, UpdateUser> {
 	/**
 	 * If no intial value is passed, a *new* document reference will be created within the users collection.
@@ -46,13 +36,5 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 		await this.update({
 			skills: fs.FieldValue.arrayRemove(toRemove)
 		});
-	}
-
-	/**
-	 * Deletes user document in Firestore **AND** all associated Documents (via cloud function).
-	 */
-	async delete() {
-		await super.delete();
-		await store.dispatch("signOutAction");
 	}
 }

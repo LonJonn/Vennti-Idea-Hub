@@ -2,7 +2,7 @@ import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 
 export default abstract class BaseReference<T, U> {
-	unsubscribe: () => void;
+	unsubscribe: () => void; // For manually unsubscribing
 
 	private _ref: fs.DocumentReference;
 	private _instanceOf: string;
@@ -79,7 +79,7 @@ export default abstract class BaseReference<T, U> {
 	/**
 	 * Writes updated data to the Firestore document *asynchronously*.
 	 *
-	 * **await** the update to access local data immediately.
+	 * **await** the update to access updated local instance.
 	 * @param newData
 	 */
 	async update(newData: U) {
@@ -87,8 +87,10 @@ export default abstract class BaseReference<T, U> {
 	}
 
 	/**
-	 * Deletes document on Firestore **AND** sets `data` to null.
-	 * Instance should **NOT** be used after this method is called.
+	 * Deletes document on Firestore, unsubscribes and sets `data` to null.
+	 *
+	 * *Instance should NOT be used after this method is called.*
+	 * ---
 	 */
 	async delete() {
 		if (this.unsubscribe) this.unsubscribe();

@@ -4,9 +4,7 @@ import router from "./router";
 import store from "./store";
 
 import "@/assets/css/tailwind.css";
-import { auth, db } from "@/firebase";
-
-(window as any).db = db;
+import { auth } from "@/firebase";
 
 auth.setPersistence("local");
 

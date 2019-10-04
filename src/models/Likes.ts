@@ -1,9 +1,9 @@
-import { firestore as fs } from "firebase/app";
 import { db } from "@/firebase";
+import { firestore as fs } from "firebase/app";
+import BaseReference from "./BaseReference";
 import { Like } from "./typings";
 import store from "@/store";
 import { sortBy } from "lodash";
-import BaseReference from "./BaseReference";
 
 interface LikeMap {
 	[id: string]: Like;
@@ -17,6 +17,19 @@ export default class Likes extends BaseReference<LikeMap, LikeMap> {
 	constructor(ideaId: string) {
 		super("likes", ideaId);
 		this._parentIdeaRef = db.collection("ideas").doc(this.id);
+	}
+
+	get userIds() {
+		return this._data ? Object.keys(this._data) : [];
+	}
+
+	get count() {
+		return this.userIds.length;
+	}
+
+	get byLatest() {
+		if (!this._data) return [];
+		return sortBy(Object.values(this._data), like => -like.createdAt.toDate());
 	}
 
 	async add() {
@@ -53,18 +66,5 @@ export default class Likes extends BaseReference<LikeMap, LikeMap> {
 				likesCount: fs.FieldValue.increment(-1)
 			})
 			.commit();
-	}
-
-	get userIds() {
-		return this._data ? Object.keys(this._data) : [];
-	}
-
-	get count() {
-		return this.userIds.length;
-	}
-
-	get byLatest() {
-		if (!this._data) return [];
-		return sortBy(Object.values(this._data), like => -like.createdAt.toDate());
 	}
 }
