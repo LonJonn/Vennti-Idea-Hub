@@ -85,12 +85,4 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		await new Likes(this.id).delete();
 		await super.delete();
 	}
-
-	async like() {
-		await new Likes(this.id).addUserLike();
-	}
-
-	async unlike() {
-		await new Likes(this.id).removeUserLike();
-	}
 }

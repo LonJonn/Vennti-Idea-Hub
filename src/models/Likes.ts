@@ -3,54 +3,29 @@ import { db } from "@/firebase";
 import { Like } from "./typings";
 import store from "@/store";
 import { sortBy } from "lodash";
+import BaseReference from "./BaseReference";
 
 interface LikeMap {
 	[id: string]: Like;
 }
 
-export default class Likes {
+export default class Likes extends BaseReference<LikeMap, LikeMap> {
 	static all = db.collection("likes");
 
-	private _data: LikeMap;
-	private _ref: fs.DocumentReference;
-	private _id: string;
-	unsubscribe: () => void;
+	private _parentIdeaRef: fs.DocumentReference;
 
 	constructor(ideaId: string) {
-		this._ref = db.collection("likes").doc(ideaId);
-		this._id = this._ref.id;
+		super("likes", ideaId);
+		this._parentIdeaRef = db.collection("ideas").doc(this.id);
 	}
 
-	/**
-	 * Creates internal listener for document changes on Firestore.
-	 * Resolves instance with populated `data` property which can be used immediately.
-	 * Remove listener with `.unsubscribe()`.
-	 *
-	 * Document changes that occur after this point ***will affect `data` automatically***,
-	 * keeping the local instance in sync with the Firestore document.
-	 *
-	 * *SHOULD BE CALLED WHEN CREATING A NEW INSTANCE.*
-	 * ---
-	 * @example const idea = await new Idea(id).init();
-	 */
-	init() {
-		if (this.unsubscribe) throw new Error(`${this._id}: Already initiated.`);
-
-		return new Promise<this>(resolve => {
-			this.unsubscribe = this._ref.onSnapshot(ds => {
-				this._data = ds.data() as LikeMap;
-				resolve(this); // Resolve instance after initial fetch
-			});
-		});
-	}
-
-	async addUserLike() {
+	async add() {
 		const { user } = store.state;
 
 		await db
 			.batch()
 			.set(
-				this._ref,
+				this.ref,
 				{
 					[user.id]: {
 						ref: user.ref,
@@ -60,49 +35,35 @@ export default class Likes {
 				},
 				{ merge: true }
 			)
-			.update(db.collection("ideas").doc(this._id), {
+			.update(this._parentIdeaRef, {
 				likesCount: fs.FieldValue.increment(1)
 			})
 			.commit();
 	}
 
-	async removeUserLike() {
+	async remove() {
 		const { user } = store.state;
 
 		await db
 			.batch()
-			.update(this._ref, {
+			.update(this.ref, {
 				[user.id]: fs.FieldValue.delete()
 			})
-			.update(db.collection("ideas").doc(this._id), {
+			.update(this._parentIdeaRef, {
 				likesCount: fs.FieldValue.increment(-1)
 			})
 			.commit();
 	}
 
-	async delete() {
-		if (this.unsubscribe) this.unsubscribe();
-
-		await this._ref.delete();
-	}
-
-	get ref() {
-		return this._ref;
-	}
-
-	get data() {
-		return this._data;
-	}
-
-	get ids() {
+	get userIds() {
 		return this._data ? Object.keys(this._data) : [];
 	}
 
 	get count() {
-		return this.ids.length;
+		return this.userIds.length;
 	}
 
-	get latest() {
+	get byLatest() {
 		if (!this._data) return [];
 		return sortBy(Object.values(this._data), like => -like.createdAt.toDate());
 	}

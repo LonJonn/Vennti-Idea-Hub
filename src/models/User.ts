@@ -31,8 +31,6 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async addSkill(newSkill: Skill) {
-		this.checkData();
-
 		await this.update({
 			skills: fs.FieldValue.arrayUnion(newSkill)
 		});
@@ -45,8 +43,6 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async removeSkill(toRemove: Skill) {
-		this.checkData();
-
 		await this.update({
 			skills: fs.FieldValue.arrayRemove(toRemove)
 		});

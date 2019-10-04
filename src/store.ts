@@ -58,7 +58,7 @@ export default new Vuex.Store({
 
 				commit("setUser", payload);
 			} catch (error) {
-				// console.error("Sign in failed.");
+				alert("Sign in failed.");
 				return;
 			}
 		},
