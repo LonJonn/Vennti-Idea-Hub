@@ -8,7 +8,7 @@
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ idea.data.owner.name }}</li>
-			<AppLikes :ideaId="idea.id" />
+			<AppLikes :likesRef="idea.data.likes" @like="idea.like()" @unlike="idea.unlike()" />
 			<button class="close" @click="deleteIdea()">Delete</button>
 		</div>
 	</div>

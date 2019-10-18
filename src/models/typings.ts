@@ -1,5 +1,4 @@
 import { firestore as fs } from "firebase/app";
-import { Likes } from ".";
 
 // Enums
 
@@ -52,7 +51,7 @@ export interface IdeaData extends NewIdea {
 	status: IdeaStatus;
 	createdOn: firebase.firestore.Timestamp;
 	likesCount: number;
-	likes?: Likes;
+	likes?: fs.CollectionReference;
 }
 
 export interface UpdateIdea {

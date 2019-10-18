@@ -1,7 +1,7 @@
-import { db } from "@/firebase";
+import { db, auth } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import BaseReference from "./BaseReference";
-import { IdeaData, IdeaStatus, NewIdea, UpdateIdea } from "./typings";
+import { IdeaData, IdeaStatus, NewIdea, UpdateIdea, Like } from "./typings";
 import store from "@/store";
 
 export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
@@ -21,6 +21,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 
 		const existing = new Idea(snap.ref);
 		existing._data = snap.data() as IdeaData;
+		existing._data.likes = snap.ref.collection("likes");
 
 		return existing;
 	}
@@ -65,6 +66,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 
 		const newIdea = new Idea();
 		newIdea.data = payload;
+		newIdea._data.likes = newIdea.ref.collection("likes");
 
 		return newIdea;
 	}
@@ -78,5 +80,33 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	 */
 	constructor(init?: string | fs.DocumentReference) {
 		super("ideas", init);
+	}
+
+	async like() {
+		const { user } = store.state;
+
+		await db
+			.batch()
+			.set(
+				this._data.likes.doc(user.id),
+				{
+					createdAt: fs.Timestamp.now(),
+					name: user.data.name,
+					ref: user.ref
+				},
+				{ merge: true }
+			)
+			.update(this.ref, { likesCount: fs.FieldValue.increment(1) })
+			.commit();
+	}
+
+	async unlike() {
+		const { user } = store.state;
+
+		await db
+			.batch()
+			.delete(this._data.likes.doc(user.id))
+			.update(this.ref, { likesCount: fs.FieldValue.increment(-1) })
+			.commit();
 	}
 }
