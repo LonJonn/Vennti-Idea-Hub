@@ -1,6 +1,6 @@
 <template>
 	<span v-if="!loading">
-		<p>Likes: {{ likes.count }}</p>
+		<p>Likes: {{ likes.length }}</p>
 		<button v-if="!userHasLiked" class="like" @click="$emit('like')">Like</button>
 		<button v-else class="like" @click="$emit('unlike')">Unlike</button>
 		{{ recentLikes }}
