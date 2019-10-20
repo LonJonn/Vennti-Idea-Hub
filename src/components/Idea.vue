@@ -8,7 +8,10 @@
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ idea.data.owner.name }}</li>
-			<AppLikes :likesRef="idea.data.likes" @like="idea.like()" @unlike="idea.unlike()" />
+
+			<li>Likes: {{ idea.data.userLikes.length }}</li>
+			<button v-if="!userDidLike" class="like" @click="idea.like()">Like</button>
+			<button v-else class="like" @click="idea.unlike()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
 		</div>
 	</div>
@@ -39,11 +42,15 @@ export default class IdeaComponent extends Vue {
 
 	// Computed
 	get readableSkills() {
-		return this.idea.data.skillsRequired.map(skill => Skill[skill]).join(", ");
+		return this.idea.data.skillsRequired.map(skillVal => Skill[skillVal]).join(", ");
 	}
 
 	get readableStatus() {
 		return IdeaStatus[this.idea.data.status];
+	}
+
+	get userDidLike() {
+		return this.idea.data.userLikes.some(userId => userId === this.user.id);
 	}
 }
 </script>

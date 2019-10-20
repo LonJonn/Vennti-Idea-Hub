@@ -1,4 +1,4 @@
-import { db, auth } from "@/firebase";
+import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import BaseReference from "./BaseReference";
 import { IdeaData, IdeaStatus, NewIdea, UpdateIdea, Like } from "./typings";
@@ -54,7 +54,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 			createdOn: fs.Timestamp.now(),
 			assigned: [],
 			status: IdeaStatus.Open,
-			likesCount: 0
+			userLikes: []
 		};
 
 		// Check for negative or out of order range
@@ -96,7 +96,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 				},
 				{ merge: true }
 			)
-			.update(this.ref, { likesCount: fs.FieldValue.increment(1) })
+			.update(this.ref, { userLikes: fs.FieldValue.arrayUnion(store.state.user.id) })
 			.commit();
 	}
 
@@ -106,7 +106,7 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		await db
 			.batch()
 			.delete(this._data.likes.doc(user.id))
-			.update(this.ref, { likesCount: fs.FieldValue.increment(-1) })
+			.update(this.ref, { userLikes: fs.FieldValue.arrayRemove(store.state.user.id) })
 			.commit();
 	}
 }

@@ -31,8 +31,8 @@ export default class LikesComponent extends Vue {
 	async mounted() {
 		this.likesRef.onSnapshot(ds => {
 			this.likes = ds.docs.map(doc => doc.data() as Like);
+			this.loading = false;
 		});
-		this.loading = false;
 	}
 
 	// Computed

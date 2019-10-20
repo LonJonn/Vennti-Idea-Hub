@@ -50,7 +50,7 @@ export interface IdeaData extends NewIdea {
 	assigned: Array<{ ref: fs.DocumentReference; name: string; dateAssigned: fs.Timestamp }>;
 	status: IdeaStatus;
 	createdOn: firebase.firestore.Timestamp;
-	likesCount: number;
+	userLikes: string[];
 	likes?: fs.CollectionReference;
 }
 

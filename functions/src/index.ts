@@ -59,8 +59,11 @@ export const userDeleteSync = functions.firestore
 
 export const ideaDeleteSync = functions.firestore
 	.document("ideas/{ideaId}")
-	.onDelete(deletedIdea => {
-		db.collection("likes")
-			.doc(deletedIdea.ref.id)
-			.delete();
+	.onDelete(async deletedIdea => {
+		const likes = (await deletedIdea.ref.collection("likes").get()).docs;
+		const batch = db.batch();
+
+		likes.forEach(like => batch.delete(like.ref));
+
+		batch.commit();
 	});

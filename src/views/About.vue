@@ -22,6 +22,7 @@ import { NewIdea } from "@/models/typings";
 import { State } from "vuex-class";
 
 import { firestore as fs } from "firebase/app";
+import { db } from "../firebase";
 
 @Component({
 	components: { AppIdea }
@@ -47,6 +48,13 @@ export default class About extends Vue {
 			this.ideas = Idea.fromCollection(ds);
 			this.loading = false;
 		});
+
+		console.log(
+			await db
+				.collectionGroup("likes")
+				.where("ref", "==", this.user.ref)
+				.get()
+		);
 	}
 
 	destroyed() {
