@@ -33,6 +33,7 @@ export default class Home extends Vue {
 	// Methods
 	deleteAccount() {
 		this.user.delete();
+		this.signOutAction();
 	}
 }
 </script>

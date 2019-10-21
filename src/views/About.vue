@@ -48,13 +48,6 @@ export default class About extends Vue {
 			this.ideas = Idea.fromCollection(ds);
 			this.loading = false;
 		});
-
-		console.log(
-			await db
-				.collectionGroup("likes")
-				.where("ref", "==", this.user.ref)
-				.get()
-		);
 	}
 
 	destroyed() {
