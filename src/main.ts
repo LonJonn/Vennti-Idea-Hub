@@ -4,9 +4,7 @@ import router from "./router";
 import store from "./store";
 
 import "@/assets/css/tailwind.css";
-import { auth, db } from "@/firebase";
-
-(window as any).db = db;
+import { auth } from "@/firebase";
 
 auth.setPersistence("local");
 
@@ -16,8 +14,8 @@ document.getElementById("app").appendChild(preloader);
 
 const unsubscribe = auth.onAuthStateChanged(async authAccount => {
 	if (authAccount) {
-		const user = await new User(authAccount.uid).init();
-		store.commit("setUser", { authAccount, user });
+		const currentUser = await new User(authAccount.uid).init();
+		store.commit("setUser", { authAccount, currentUser });
 	}
 
 	new Vue({

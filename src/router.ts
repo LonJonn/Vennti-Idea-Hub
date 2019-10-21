@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-import About from "./views/About.vue";
+import IdeasList from "./views/IdeasList.vue";
 
 import store from "./store";
 
@@ -17,12 +17,10 @@ const router = new Router({
 			component: Home
 		},
 		{
-			path: "/about",
-			name: "about",
-			component: About,
-			meta: {
-				requiresAuth: true
-			}
+			path: "/ideas",
+			name: "ideasList",
+			component: IdeasList,
+			meta: { requiresAuth: true }
 		},
 		{
 			path: "*",

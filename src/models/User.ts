@@ -1,18 +1,7 @@
-import BaseReference from "./BaseReference";
-import { UserData, UpdateUser, Skill } from "./typings";
-import Idea from "./Idea";
-import store from "@/store";
-
 import { firestore as fs } from "firebase/app";
+import BaseReference from "./BaseReference";
+import { Skill, UpdateUser, UserData } from "./typings";
 
-/**
- * If no intial value is passed, a *new* document reference will be created within the passed collection.
- *
- * Instance is **NOT** written to Firestore until calling `.ref.set` *OR* setting the `data` property.
- * @classdesc
- * @param collection The target Firestore collection (e.g. "ideas")
- * @param init Optional param for existing documents
- */
 export default class User extends BaseReference<UserData, UpdateUser> {
 	/**
 	 * If no intial value is passed, a *new* document reference will be created within the users collection.
@@ -20,7 +9,7 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * Instance is **NOT** written to Firestore until calling `.ref.set` *OR* setting the `data` property.
 	 * @param init Optional param for existing documents
 	 */
-	constructor(init) {
+	constructor(init?: string | fs.DocumentReference) {
 		super("users", init);
 	}
 
@@ -31,8 +20,6 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async addSkill(newSkill: Skill) {
-		this.checkData();
-
 		await this.update({
 			skills: fs.FieldValue.arrayUnion(newSkill)
 		});
@@ -45,18 +32,8 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * @requires src/models/typings
 	 */
 	async removeSkill(toRemove: Skill) {
-		this.checkData();
-
 		await this.update({
 			skills: fs.FieldValue.arrayRemove(toRemove)
 		});
-	}
-
-	/**
-	 * Deletes user document in Firestore **AND** all associated Documents (via cloud function).
-	 */
-	async delete() {
-		await super.delete();
-		await store.dispatch("signOutAction");
 	}
 }
