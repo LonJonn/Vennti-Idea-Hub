@@ -22,6 +22,7 @@ import { NewIdea } from "@/models/typings";
 import { State } from "vuex-class";
 
 import { firestore as fs } from "firebase/app";
+import { db } from "../firebase";
 
 @Component({
 	components: { AppIdea }
@@ -55,6 +56,9 @@ export default class About extends Vue {
 
 	// Methods
 	createIdea() {
+		this.ideaForm.description += ["😈", "🎃", "👻", "👺"][Math.floor(Math.random() * 4)].repeat(
+			Math.floor(Math.random() * 3)
+		);
 		Idea.create(this.ideaForm)
 			.then(() => {
 				this.ideaForm = {

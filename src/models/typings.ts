@@ -1,7 +1,8 @@
-import { firestore as fs } from "firebase/app";
+import { firestore as fs } from "firebase";
 
-// Enums
-
+/**
+ * **<==Enums==>**
+ */
 export enum Skill {
 	Technical,
 	Business,
@@ -23,8 +24,9 @@ export enum IdeaDifficulty {
 	Hard
 }
 
-// User
-
+/**
+ * **<==Users==>**
+ */
 export interface UserData {
 	name: string;
 	skills: Skill[];
@@ -36,8 +38,9 @@ export interface UpdateUser {
 	skills?: fs.FieldValue;
 }
 
-// Idea
-
+/**
+ * **<==Ideas==>**
+ */
 export interface NewIdea {
 	benefit: string;
 	description: string;
@@ -47,10 +50,10 @@ export interface NewIdea {
 
 export interface IdeaData extends NewIdea {
 	owner: { ref: fs.DocumentReference; name: string };
-	assigned: Array<{ ref: fs.DocumentReference; name: string; dateAssigned: fs.Timestamp }>;
+	assignments: string[];
 	status: IdeaStatus;
-	createdOn: firebase.firestore.Timestamp;
-	likesCount: number;
+	createdOn: fs.Timestamp;
+	likes: string[];
 }
 
 export interface UpdateIdea {
@@ -59,12 +62,25 @@ export interface UpdateIdea {
 	status?: IdeaStatus;
 	skillsRequired?: fs.FieldValue;
 	timeEstimation?: [number, number];
+	likes?: fs.FieldValue;
+	assignments?: fs.FieldValue;
 }
 
-// Likes
-
+/**
+ * **<==Likes==>**
+ */
 export interface Like {
 	ref: fs.DocumentReference;
 	name: string;
 	createdAt: fs.Timestamp;
+	type: string;
+}
+
+/**
+ * **<==Assignments==>**
+ */
+export interface Assignment {
+	ref: fs.DocumentReference;
+	name: string;
+	assignedAt: fs.Timestamp;
 }
