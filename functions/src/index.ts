@@ -25,6 +25,7 @@ export const userDeleteSync = functions.firestore
 			.collectionGroup("likes")
 			.where("ref", "==", deletedUser.ref)
 			.get();
+
 		// Delete each like document in subcollection & update parent `likes` Array
 		likes.forEach(likeDoc => {
 			batch.delete(likeDoc.ref);
@@ -42,6 +43,7 @@ export const userDeleteSync = functions.firestore
 			.collectionGroup("assignments")
 			.where("ref", "==", deletedUser.ref)
 			.get();
+
 		// Delete each assignment in subcollection & update parent `assignments` Array
 		assignments.forEach(assignmentDoc => {
 			batch.delete(assignmentDoc.ref);
@@ -59,6 +61,7 @@ export const userDeleteSync = functions.firestore
 			.collection("ideas")
 			.where("owner.ref", "==", deletedUser.ref)
 			.get();
+
 		// Delete each user Idea
 		ideas.forEach(ideaDoc => batch.delete(ideaDoc.ref));
 

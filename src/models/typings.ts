@@ -1,4 +1,4 @@
-import { firestore as fs } from "firebase";
+import { firestore as fs } from "firebase/app";
 
 /**
  * **<==Enums==>**
@@ -30,7 +30,6 @@ export enum IdeaDifficulty {
 export interface UserData {
 	name: string;
 	skills: Skill[];
-	commentsCount: number;
 }
 
 export interface UpdateUser {

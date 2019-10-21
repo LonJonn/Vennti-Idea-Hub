@@ -1,14 +1,14 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { auth } from "@/firebase";
 import firebase from "firebase/app";
+import { auth } from "@/firebase";
 
 import { User } from "@/models";
 
 interface State {
 	authAccount: firebase.User;
-	user: User;
+	currentUser: User;
 }
 
 Vue.use(Vuex);
@@ -18,22 +18,22 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
 export default new Vuex.Store({
 	state: {
 		authAccount: null,
-		user: null
+		currentUser: null
 	} as State,
 
 	getters: {
-		isAuthed: state => !!state.authAccount && !!state.user
+		isAuthed: state => !!state.authAccount && !!state.currentUser
 	},
 
 	mutations: {
 		setUser(state, payload: State): void {
 			state.authAccount = payload.authAccount;
-			state.user = payload.user;
+			state.currentUser = payload.currentUser;
 		},
 		removeUser(state): void {
 			state.authAccount = null;
-			state.user.unsubscribe();
-			state.user = null;
+			state.currentUser.unsubscribe();
+			state.currentUser = null;
 		}
 	},
 
@@ -43,17 +43,16 @@ export default new Vuex.Store({
 				const res = await auth.signInWithPopup(googleProvider);
 
 				// Create account for new users
-				const user = await new User(res.user.uid).init();
-				if (!user.data)
-					user.data = {
-						commentsCount: 0,
+				const currentUser = await new User(res.user.uid).init();
+				if (!currentUser.data)
+					currentUser.data = {
 						name: res.user.displayName,
 						skills: []
 					};
 
 				const payload: State = {
 					authAccount: res.user,
-					user
+					currentUser
 				};
 
 				commit("setUser", payload);

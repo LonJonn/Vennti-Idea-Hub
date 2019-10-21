@@ -5,19 +5,15 @@ export default abstract class BaseReference<T, U> {
 	unsubscribe: () => void; // For manually unsubscribing
 
 	private _ref: fs.DocumentReference;
-	private _instanceOf: string;
 	protected _data: T;
 
 	constructor(collection: string, init?: string | fs.DocumentReference) {
-		this._instanceOf = collection;
-		const cRef = db.collection(this._instanceOf);
-
 		if (init instanceof fs.DocumentReference) {
 			this._ref = init;
 		} else if (typeof init === "string") {
-			this._ref = cRef.doc(init);
+			this._ref = db.collection(collection).doc(init);
 		} else {
-			this._ref = cRef.doc(); // create new reference if no initial provided
+			this._ref = db.collection(collection).doc(); // create new reference if no initial provided
 		}
 	}
 
@@ -40,7 +36,7 @@ export default abstract class BaseReference<T, U> {
 	 * @returns Document reference data **IF** initialised with `.init` *else* returns null
 	 */
 	get data() {
-		return this._data;
+		return this._data || null;
 	}
 
 	/**

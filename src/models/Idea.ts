@@ -1,8 +1,8 @@
 import { db } from "@/firebase";
+import store from "@/store";
 import { firestore as fs } from "firebase/app";
 import BaseReference from "./BaseReference";
-import { IdeaData, IdeaStatus, NewIdea, UpdateIdea, Like, Assignment } from "./typings";
-import store from "@/store";
+import { Assignment, IdeaData, IdeaStatus, Like, NewIdea, UpdateIdea } from "./typings";
 
 // Global store
 const { state } = store;
@@ -22,10 +22,10 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	static fromExisting(snap: fs.DocumentSnapshot) {
 		if (!snap.exists) throw new Error(`Idea does not exist: ${snap.id}`);
 
-		const existing = new Idea(snap.ref);
-		existing._data = snap.data() as IdeaData;
+		const existingIdea = new Idea(snap.ref);
+		existingIdea._data = snap.data() as IdeaData;
 
-		return existing;
+		return existingIdea;
 	}
 
 	/**
@@ -50,12 +50,12 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		const payload: IdeaData = {
 			...initData,
 			owner: {
-				ref: state.user.ref,
-				name: state.user.data.name
+				ref: state.currentUser.ref,
+				name: state.currentUser.data.name
 			},
 			createdOn: fs.Timestamp.now(),
-			assignments: [],
 			status: IdeaStatus.Open,
+			assignments: [],
 			likes: []
 		};
 
@@ -87,24 +87,24 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		await db
 			.batch()
 			.set(
-				this.ref.collection("likes").doc(state.user.id),
+				this.ref.collection("likes").doc(state.currentUser.id),
 				{
 					createdAt: fs.Timestamp.now(),
-					name: state.user.data.name,
-					ref: state.user.ref,
+					name: state.currentUser.data.name,
+					ref: state.currentUser.ref,
 					type
 				} as Like,
 				{ merge: true }
 			)
-			.update(this.ref, { likes: fs.FieldValue.arrayUnion(state.user.id) })
+			.update(this.ref, { likes: fs.FieldValue.arrayUnion(state.currentUser.id) })
 			.commit();
 	}
 
 	async removeLike() {
 		await db
 			.batch()
-			.delete(this.ref.collection("likes").doc(state.user.id))
-			.update(this.ref, { likes: fs.FieldValue.arrayRemove(state.user.id) })
+			.delete(this.ref.collection("likes").doc(state.currentUser.id))
+			.update(this.ref, { likes: fs.FieldValue.arrayRemove(state.currentUser.id) })
 			.commit();
 	}
 
@@ -112,23 +112,23 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		await db
 			.batch()
 			.set(
-				this.ref.collection("assignments").doc(state.user.id),
+				this.ref.collection("assignments").doc(state.currentUser.id),
 				{
 					assignedAt: fs.Timestamp.now(),
-					name: state.user.data.name,
-					ref: state.user.ref
+					name: state.currentUser.data.name,
+					ref: state.currentUser.ref
 				} as Assignment,
 				{ merge: true }
 			)
-			.update(this.ref, { assignments: fs.FieldValue.arrayUnion(state.user.id) })
+			.update(this.ref, { assignments: fs.FieldValue.arrayUnion(state.currentUser.id) })
 			.commit();
 	}
 
 	async unassignUser() {
 		await db
 			.batch()
-			.delete(this.ref.collection("assignments").doc(state.user.id))
-			.update(this.ref, { assignments: fs.FieldValue.arrayRemove(state.user.id) })
+			.delete(this.ref.collection("assignments").doc(state.currentUser.id))
+			.update(this.ref, { assignments: fs.FieldValue.arrayRemove(state.currentUser.id) })
 			.commit();
 	}
 }

@@ -1,7 +1,6 @@
-import BaseReference from "./BaseReference";
-import { UserData, UpdateUser, Skill } from "./typings";
-
 import { firestore as fs } from "firebase/app";
+import BaseReference from "./BaseReference";
+import { Skill, UpdateUser, UserData } from "./typings";
 
 export default class User extends BaseReference<UserData, UpdateUser> {
 	/**
@@ -10,7 +9,7 @@ export default class User extends BaseReference<UserData, UpdateUser> {
 	 * Instance is **NOT** written to Firestore until calling `.ref.set` *OR* setting the `data` property.
 	 * @param init Optional param for existing documents
 	 */
-	constructor(init) {
+	constructor(init?: string | fs.DocumentReference) {
 		super("users", init);
 	}
 

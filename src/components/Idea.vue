@@ -1,5 +1,5 @@
 <template>
-	<div class="mb-5">
+	<div v-if="idea.data" class="mb-5">
 		<div class="list bg-gray-300 rounded text-blue-800 p-5">
 			<li>description: {{ idea.data.description }}</li>
 			<li>benefit: {{ idea.data.benefit }}</li>
@@ -21,16 +21,15 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import AppLikes from "@/components/Likes.vue";
 import { State } from "vuex-class";
 
 import { User, Idea } from "@/models";
 import { Skill, IdeaStatus } from "@/models/typings";
 
-@Component({ components: { AppLikes } })
+@Component
 export default class IdeaComponent extends Vue {
 	// Mapped Store
-	@State user: User;
+	@State currentUser: User;
 
 	// Props
 	@Prop() idea: Idea;
@@ -52,11 +51,11 @@ export default class IdeaComponent extends Vue {
 	}
 
 	get userDidLike() {
-		return this.idea.data.likes.some(userId => userId === this.user.id);
+		return this.idea.data.likes.some(userId => userId === this.currentUser.id);
 	}
 
 	get userIsAssigned() {
-		return this.idea.data.assignments.some(userId => userId === this.user.id);
+		return this.idea.data.assignments.some(userId => userId === this.currentUser.id);
 	}
 }
 </script>
