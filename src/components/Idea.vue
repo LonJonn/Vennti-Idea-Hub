@@ -6,12 +6,14 @@
 			<li>skills required: {{ readableSkills }}</li>
 			<li>opened: {{ idea.data.createdOn.toDate() }}</li>
 			<li>status: {{ readableStatus }}</li>
-			<br />
+			<li>Assigned: {{ idea.data.assignments.length }}</li>
+			<button v-if="!userIsAssigned" class="like" @click="idea.assignUser()">assign</button>
+			<button v-else class="like" @click="idea.unassignUser()">Unassign</button>
 			<li>Owner: {{ idea.data.owner.name }}</li>
-
-			<li>Likes: {{ idea.data.userLikes.length }}</li>
-			<button v-if="!userDidLike" class="like" @click="idea.like()">Like</button>
-			<button v-else class="like" @click="idea.unlike()">Unlike</button>
+			<br />
+			<li>Likes: {{ idea.data.likes.length }}</li>
+			<button v-if="!userDidLike" class="like" @click="idea.addLike()">Like</button>
+			<button v-else class="like" @click="idea.removeLike()">Unlike</button>
 			<button class="close" @click="deleteIdea()">Delete</button>
 		</div>
 	</div>
@@ -50,7 +52,11 @@ export default class IdeaComponent extends Vue {
 	}
 
 	get userDidLike() {
-		return this.idea.data.userLikes.some(userId => userId === this.user.id);
+		return this.idea.data.likes.some(userId => userId === this.user.id);
+	}
+
+	get userIsAssigned() {
+		return this.idea.data.assignments.some(userId => userId === this.user.id);
 	}
 }
 </script>

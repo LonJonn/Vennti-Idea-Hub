@@ -56,6 +56,9 @@ export default class About extends Vue {
 
 	// Methods
 	createIdea() {
+		this.ideaForm.description += ["😈", "🎃", "👻", "👺"][Math.floor(Math.random() * 4)].repeat(
+			Math.floor(Math.random() * 3)
+		);
 		Idea.create(this.ideaForm)
 			.then(() => {
 				this.ideaForm = {

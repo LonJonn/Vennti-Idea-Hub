@@ -1,8 +1,11 @@
 import { db } from "@/firebase";
 import { firestore as fs } from "firebase/app";
 import BaseReference from "./BaseReference";
-import { IdeaData, IdeaStatus, NewIdea, UpdateIdea, Like } from "./typings";
+import { IdeaData, IdeaStatus, NewIdea, UpdateIdea, Like, Assignment } from "./typings";
 import store from "@/store";
+
+// Global store
+const { state } = store;
 
 export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 	// Start Static
@@ -21,7 +24,6 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 
 		const existing = new Idea(snap.ref);
 		existing._data = snap.data() as IdeaData;
-		existing._data.likes = snap.ref.collection("likes");
 
 		return existing;
 	}
@@ -48,13 +50,13 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		const payload: IdeaData = {
 			...initData,
 			owner: {
-				ref: store.state.user.ref,
-				name: store.state.user.data.name
+				ref: state.user.ref,
+				name: state.user.data.name
 			},
 			createdOn: fs.Timestamp.now(),
-			assigned: [],
+			assignments: [],
 			status: IdeaStatus.Open,
-			userLikes: []
+			likes: []
 		};
 
 		// Check for negative or out of order range
@@ -66,7 +68,6 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 
 		const newIdea = new Idea();
 		newIdea.data = payload;
-		newIdea._data.likes = newIdea.ref.collection("likes");
 
 		return newIdea;
 	}
@@ -82,31 +83,52 @@ export default class Idea extends BaseReference<IdeaData, UpdateIdea> {
 		super("ideas", init);
 	}
 
-	async like() {
-		const { user } = store.state;
-
+	async addLike(type: string = "👍") {
 		await db
 			.batch()
 			.set(
-				this._data.likes.doc(user.id),
+				this.ref.collection("likes").doc(state.user.id),
 				{
 					createdAt: fs.Timestamp.now(),
-					name: user.data.name,
-					ref: user.ref
-				},
+					name: state.user.data.name,
+					ref: state.user.ref,
+					type
+				} as Like,
 				{ merge: true }
 			)
-			.update(this.ref, { userLikes: fs.FieldValue.arrayUnion(store.state.user.id) })
+			.update(this.ref, { likes: fs.FieldValue.arrayUnion(state.user.id) })
 			.commit();
 	}
 
-	async unlike() {
-		const { user } = store.state;
-
+	async removeLike() {
 		await db
 			.batch()
-			.delete(this._data.likes.doc(user.id))
-			.update(this.ref, { userLikes: fs.FieldValue.arrayRemove(store.state.user.id) })
+			.delete(this.ref.collection("likes").doc(state.user.id))
+			.update(this.ref, { likes: fs.FieldValue.arrayRemove(state.user.id) })
+			.commit();
+	}
+
+	async assignUser() {
+		await db
+			.batch()
+			.set(
+				this.ref.collection("assignments").doc(state.user.id),
+				{
+					assignedAt: fs.Timestamp.now(),
+					name: state.user.data.name,
+					ref: state.user.ref
+				} as Assignment,
+				{ merge: true }
+			)
+			.update(this.ref, { assignments: fs.FieldValue.arrayUnion(state.user.id) })
+			.commit();
+	}
+
+	async unassignUser() {
+		await db
+			.batch()
+			.delete(this.ref.collection("assignments").doc(state.user.id))
+			.update(this.ref, { assignments: fs.FieldValue.arrayRemove(state.user.id) })
 			.commit();
 	}
 }

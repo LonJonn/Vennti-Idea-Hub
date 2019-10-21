@@ -6,7 +6,7 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 
 /**
- * >>> **Keeps database in sync on user delete**
+ * **<==Sync database on user delete==>**
  */
 export const userDeleteSync = functions.firestore
 	.document("users/{userId}")
@@ -17,7 +17,7 @@ export const userDeleteSync = functions.firestore
 		const batch = db.batch();
 
 		/**
-		 * *Batch #1*
+		 * *<==Batch #1==>*
 		 * **Removing User Likes**
 		 */
 		// Get all User likes in all subcollections
@@ -25,16 +25,33 @@ export const userDeleteSync = functions.firestore
 			.collectionGroup("likes")
 			.where("ref", "==", deletedUser.ref)
 			.get();
-		// Delete each like document in subcollection & update parent `userLikes` Array
+		// Delete each like document in subcollection & update parent `likes` Array
 		likes.forEach(likeDoc => {
 			batch.delete(likeDoc.ref);
 			batch.update(likeDoc.ref.parent.parent!, {
-				userLikes: admin.firestore.FieldValue.arrayRemove(deletedUser.id)
+				likes: admin.firestore.FieldValue.arrayRemove(deletedUser.id)
 			});
 		});
 
 		/**
-		 * *Batch #2*
+		 * *<==Batch #2==>*
+		 * **Removing User Assignments**
+		 */
+		// Get all User assignments in all subcollections
+		const assignments = await db
+			.collectionGroup("assignments")
+			.where("ref", "==", deletedUser.ref)
+			.get();
+		// Delete each assignment in subcollection & update parent `assignments` Array
+		assignments.forEach(assignmentDoc => {
+			batch.delete(assignmentDoc.ref);
+			batch.update(assignmentDoc.ref.parent.parent!, {
+				assignments: admin.firestore.FieldValue.arrayRemove(deletedUser.id)
+			});
+		});
+
+		/**
+		 * *<==Batch #3==>*
 		 * **Removing User Idea**
 		 */
 		// Get all User Ideas
@@ -55,7 +72,7 @@ export const userDeleteSync = functions.firestore
 	});
 
 /**
- * >>> **Recursively delete idea likes**
+ * **<==Recursively delete idea likes==>**
  */
 export const ideaDeleteSync = functions.firestore
 	.document("ideas/{ideaId}")
@@ -68,6 +85,10 @@ export const ideaDeleteSync = functions.firestore
 		// Delete all likes in deleted idea subcollection
 		const likes = await deletedIdea.ref.collection("likes").get();
 		likes.forEach(like => batch.delete(like.ref));
+
+		// Delete all assignments in deleted idea subcollection
+		const assignments = await deletedIdea.ref.collection("assignments").get();
+		assignments.forEach(assignment => batch.delete(assignment.ref));
 
 		// Commit batch
 		batch.commit();
