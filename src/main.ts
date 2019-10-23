@@ -4,14 +4,14 @@ import router from "./router";
 import store from "./store";
 
 import "@/assets/css/tailwind.css";
-import { auth, db } from "@/firebase";
+import { auth } from "@/firebase";
 
 auth.setPersistence("local");
 
 import preloader from "@/assets/preloader";
 document.getElementById("app").appendChild(preloader);
 
-const unsubscribe = auth.onAuthStateChanged(async authAccount => {
+const unsubscribe = auth.onAuthStateChanged(() => {
 	new Vue({
 		router,
 		store,
