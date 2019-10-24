@@ -3,10 +3,10 @@
 		<div class="list bg-gray-300 rounded text-blue-800 p-5">
 			<li>description: {{ idea.description }}</li>
 			<li>benefit: {{ idea.benefit }}</li>
-			<!-- <li>skills required: {{ readableSkills }}</li> -->
+			<li>skills required: {{ readableSkills }}</li>
 			<li>opened: {{ idea.createdOn.toDate() }}</li>
 			<li>likes: {{ idea.likesCount }}</li>
-			<!-- <li>status: {{ readableStatus }}</li> -->
+			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ idea.owner.name }}</li>
 			<!-- <button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button> -->
@@ -48,14 +48,14 @@ export default class IdeaComponent extends Vue {
 	// 	}
 	// }
 
-	// // Computed
-	// get readableSkills() {
-	// 	return this.idea.data.skillsRequired.map(skill => Skill[skill]).join(", ");
-	// }
+	// Computed
+	get readableSkills() {
+		return this.idea.skillsRequired.map(skill => AppTypes.Skill[skill]).join(", ") || "None";
+	}
 
-	// get readableStatus() {
-	// 	return IdeaStatus[this.idea.data.status];
-	// }
+	get readableStatus() {
+		return AppTypes.IdeaStatus[this.idea.status];
+	}
 
 	// get recentLikes() {
 	// 	return this.likes.latest
