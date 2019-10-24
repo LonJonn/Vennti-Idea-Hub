@@ -6,6 +6,9 @@ import store from "./store";
 import "@/assets/css/tailwind.css";
 import { auth } from "@/firebase";
 
+import { firestorePlugin } from "vuefire";
+Vue.use(firestorePlugin);
+
 auth.setPersistence("local");
 
 import preloader from "@/assets/preloader";

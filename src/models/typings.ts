@@ -45,8 +45,9 @@ export interface NewIdea {
 	timeEstimation: [number, number];
 }
 
-export interface IdeaData extends NewIdea {
-	owner: { ref: fs.DocumentReference; name: string };
+export interface Idea extends NewIdea {
+	id?: string;
+	owner: { id: string; name: string };
 	assigned: Array<{ ref: fs.DocumentReference; name: string; dateAssigned: fs.Timestamp }>;
 	status: IdeaStatus;
 	createdOn: firebase.firestore.Timestamp;
