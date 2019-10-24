@@ -1,7 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
-import About from "./views/About.vue";
 
 import { auth } from "@/firebase";
 
@@ -14,15 +12,21 @@ const router = new Router({
 		{
 			path: "/",
 			name: "home",
-			component: Home
+			component: () => import("./views/Home.vue")
 		},
 		{
-			path: "/about",
-			name: "about",
-			component: About,
+			path: "/ideas",
+			name: "ideas",
+			component: () => import("./views/List.vue"),
 			meta: {
 				requiresAuth: true
 			}
+		},
+		{
+			path: "/ideas/:ideaId",
+			name: "details",
+			component: () => import("./views/Details.vue"),
+			props: true
 		},
 		{
 			path: "*",

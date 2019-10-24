@@ -23,7 +23,7 @@ import { firestore } from "firebase/app";
 	components: { AppIdea },
 	firestore: { ideas: db.collection("ideas").orderBy("createdOn", "desc") }
 })
-export default class About extends Vue {
+export default class List extends Vue {
 	// State
 	ideas: AppTypes.Idea[] = [];
 	ideaForm: AppTypes.NewIdea = {

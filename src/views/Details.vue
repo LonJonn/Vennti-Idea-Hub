@@ -9,7 +9,6 @@
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ idea.owner.name }}</li>
-			<router-link :to="{path: `/ideas/${idea.id}`, props: {idea: idea}, }">Details</router-link>
 			<!-- <button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button> -->
 			<!-- <button v-else class="like" @click="idea.unlike()">Unlike</button> -->
 			<button class="close" @click="remove()">Delete</button>
@@ -24,7 +23,7 @@ import { db } from "@/firebase";
 import * as AppTypes from "@/models/typings";
 
 @Component
-export default class IdeaComponent extends Vue {
+export default class Details extends Vue {
 	// Props
 	@Prop() idea: AppTypes.Idea;
 
