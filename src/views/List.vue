@@ -14,14 +14,14 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import AppIdea from "@/components/Idea.vue";
+import AppIdea from "@/components/List/Idea.vue";
 import { db, auth } from "@/firebase";
 import * as AppTypes from "@/models/typings";
 import { firestore } from "firebase/app";
 
 @Component({
 	components: { AppIdea },
-	firestore: { ideas: db.collection("ideas").orderBy("createdOn", "desc") }
+	firestore: { ideas: db.collection("ideas").orderBy("createdAt", "desc") }
 })
 export default class List extends Vue {
 	// State
@@ -34,7 +34,7 @@ export default class List extends Vue {
 	};
 
 	// Methods
-	async add() {
+	add() {
 		// Check for negative or out of order range
 		const validTimeRange =
 			!this.ideaForm.timeEstimation.some(hours => hours < 0) &&
@@ -42,7 +42,7 @@ export default class List extends Vue {
 
 		if (!validTimeRange) throw new Error("Invalid time estimation.");
 
-		await db.collection("ideas").add({
+		db.collection("ideas").add({
 			...this.ideaForm,
 			owner: {
 				id: auth.currentUser.uid,
@@ -50,7 +50,7 @@ export default class List extends Vue {
 			},
 			assigned: [],
 			status: AppTypes.IdeaStatus.Open,
-			createdOn: firestore.Timestamp.now(),
+			createdAt: firestore.Timestamp.now(),
 			likesCount: 0
 		});
 

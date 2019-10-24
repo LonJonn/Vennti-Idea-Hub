@@ -1,52 +1,50 @@
 <template>
-	<div class="mb-5">
-		<div class="list bg-gray-300 rounded text-blue-800 p-5">
+	<div>
+		<div v-if="loading">Loading...</div>
+		<div v-else class="mb-5 list text-blue-800 p-5">
 			<li>description: {{ idea.description }}</li>
 			<li>benefit: {{ idea.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>
-			<li>opened: {{ idea.createdOn.toDate() }}</li>
+			<li>opened: {{ idea.createdAt.toDate() }}</li>
 			<li>likes: {{ idea.likesCount }}</li>
 			<li>status: {{ readableStatus }}</li>
 			<br />
 			<li>Owner: {{ idea.owner.name }}</li>
-			<!-- <button v-if="!userHasLiked" class="like" @click="idea.like()">Like</button> -->
-			<!-- <button v-else class="like" @click="idea.unlike()">Unlike</button> -->
+			<AppLikes :ideaId="idea.id" />
 			<button class="close" @click="remove()">Delete</button>
-			<!-- {{ recentLikes }} -->
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import AppLikes from "@/components/Details/Likes.vue";
 import { db } from "@/firebase";
 import * as AppTypes from "@/models/typings";
 
-@Component
+@Component({ components: { AppLikes } })
 export default class Details extends Vue {
-	// Props
-	@Prop() idea: AppTypes.Idea;
+	// State
+	idea: AppTypes.Idea = null;
+	loading = true;
+
+	// Hooks
+	async mounted() {
+		const { ideaId } = this.$route.params;
+		await this.$bind("idea", db.collection("ideas").doc(ideaId));
+		this.loading = false;
+	}
 
 	// Methods
 	remove() {
-		db.collection("ideas")
-			.doc(this.idea.id)
-			.delete();
+		if (confirm("Are you sure?")) {
+			db.collection("ideas")
+				.doc(this.idea.id)
+				.delete();
+
+			this.$router.push("/ideas");
+		}
 	}
-
-	// // Hooks
-	// async mounted() {
-	// 	this.likes = await new Likes(this.idea.id).init();
-
-	// 	this.loading = false;
-	// }
-
-	// // Methods
-	// deleteIdea() {
-	// 	if (confirm("Are you sure?")) {
-	// 		this.idea.delete();
-	// 	}
-	// }
 
 	// Computed
 	get readableSkills() {
@@ -56,17 +54,6 @@ export default class Details extends Vue {
 	get readableStatus() {
 		return AppTypes.IdeaStatus[this.idea.status];
 	}
-
-	// get recentLikes() {
-	// 	return this.likes.latest
-	// 		.splice(0, 2)
-	// 		.map(like => (like.ref.id === this.user.id ? "You" : like.name))
-	// 		.join(", ");
-	// }
-
-	// get userHasLiked() {
-	// 	return this.likes.ids.some(id => id === this.user.id);
-	// }
 }
 </script>
 

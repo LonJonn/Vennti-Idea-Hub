@@ -43,7 +43,7 @@ export interface Idea extends NewIdea {
 	id?: string;
 	owner: { id: string; name: string };
 	status: IdeaStatus;
-	createdOn: firebase.firestore.Timestamp;
+	createdAt: firebase.firestore.Timestamp;
 	assignedCount: number;
 	likesCount: number;
 	commentCount: number;
