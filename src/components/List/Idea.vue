@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import * as AppTypes from "@/models/typings";
+import * as AppTypes from "@/typings";
 
 @Component
 export default class IdeaComponent extends Vue {

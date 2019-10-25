@@ -10,7 +10,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
-import * as AppTypes from "@/models/typings";
+import * as AppTypes from "@/typings";
+import * as utils from "@/utils";
 
 @Component
 export default class LikesComponent extends Vue {
@@ -25,41 +26,29 @@ export default class LikesComponent extends Vue {
 		.collection("likes");
 
 	// Hooks
-	async created() {
+	async mounted() {
 		await this.$bind("likes", this.ref.orderBy("createdAt"));
 		this.$emit("loaded");
 	}
 
 	// Methods
 	async addLike(value: string = "👽") {
-		const ideaRef = db.collection("ideas").doc(this.ideaId);
 		const likeRef = this.ref.doc(auth.currentUser.uid);
-
 		const newLike: AppTypes.Like = {
 			createdAt: firestore.Timestamp.now(),
 			value,
 			owner: {
 				id: auth.currentUser.uid,
-				name: auth.currentUser.displayName
+				displayName: auth.currentUser.displayName
 			}
 		};
 
-		await db
-			.batch()
-			.set(likeRef, newLike, { merge: true })
-			.update(ideaRef, { likesCount: firestore.FieldValue.increment(1) })
-			.commit();
+		utils.subcollectionAdd(likeRef, newLike, "likesCount");
 	}
 
 	async removeLike() {
-		const ideaRef = db.collection("ideas").doc(this.ideaId);
 		const likeRef = this.ref.doc(auth.currentUser.uid);
-
-		await db
-			.batch()
-			.delete(likeRef)
-			.update(ideaRef, { likesCount: firestore.FieldValue.increment(-1) })
-			.commit();
+		utils.subcollectionRemove(likeRef, "likesCount");
 	}
 
 	// Computed
@@ -72,7 +61,7 @@ export default class LikesComponent extends Vue {
 			this.likes
 				.map(
 					like =>
-						(like.owner.id === auth.currentUser.uid ? "You" : like.owner.name) +
+						(like.owner.id === auth.currentUser.uid ? "You" : like.owner.displayName) +
 						like.value
 				)
 				.join(", ") || "None"

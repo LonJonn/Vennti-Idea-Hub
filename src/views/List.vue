@@ -16,7 +16,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import AppIdea from "@/components/List/Idea.vue";
 import { db, auth } from "@/firebase";
-import * as AppTypes from "@/models/typings";
+import * as AppTypes from "@/typings";
 import { firestore } from "firebase/app";
 
 @Component({
@@ -26,7 +26,7 @@ import { firestore } from "firebase/app";
 export default class List extends Vue {
 	// State
 	ideas: AppTypes.Idea[] = [];
-	ideaForm: AppTypes.NewIdea = {
+	ideaForm: AppTypes.IdeaNew = {
 		benefit: null,
 		description: null,
 		skillsRequired: [],
@@ -49,7 +49,7 @@ export default class List extends Vue {
 				name: auth.currentUser.displayName
 			},
 			assigned: [],
-			status: AppTypes.IdeaStatus.Open,
+			status: AppTypes.Status.Open,
 			createdAt: firestore.Timestamp.now(),
 			likesCount: 0
 		});
