@@ -39,7 +39,8 @@ export default class LikesComponent extends Vue {
 			value,
 			owner: {
 				id: auth.currentUser.uid,
-				displayName: auth.currentUser.displayName
+				displayName: auth.currentUser.displayName,
+				photoUrl: auth.currentUser.photoURL
 			}
 		};
 

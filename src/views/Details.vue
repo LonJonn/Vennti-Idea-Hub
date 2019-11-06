@@ -14,6 +14,7 @@
 			<br />
 			<AppLikes :ideaId="idea.id" />
 			<button class="button bg-red-500 float-right" @click="remove()">Delete</button>
+			<AppComments :ideaId="idea.id" />
 		</div>
 	</div>
 </template>
@@ -21,11 +22,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AppLikes from "@/components/Details/Likes.vue";
+import AppComments from "@/components/Details/Comments.vue";
 import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
 
-@Component({ components: { AppLikes } })
+@Component({ components: { AppLikes, AppComments } })
 export default class Details extends Vue {
 	// State
 	idea: AppTypes.Idea = null;
@@ -58,7 +60,8 @@ export default class Details extends Vue {
 		const newAssignment: AppTypes.Assignment = {
 			owner: {
 				id: auth.currentUser.uid,
-				displayName: auth.currentUser.displayName
+				displayName: auth.currentUser.displayName,
+				photoUrl: auth.currentUser.photoURL
 			},
 			createdAt: firestore.Timestamp.now()
 		};

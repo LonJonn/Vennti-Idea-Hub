@@ -35,6 +35,7 @@ export interface User {
 interface Owner {
 	id: string;
 	displayName: string;
+	photoUrl?: string;
 }
 
 export interface UpdateUserSkills {
@@ -85,4 +86,13 @@ export interface Like {
 export interface Assignment {
 	owner: Owner;
 	createdAt: firestore.Timestamp;
+}
+
+/**
+ * **<==Comments==>**
+ */
+export interface Comment {
+	owner: Owner;
+	createdAt: firestore.Timestamp;
+	content: string;
 }

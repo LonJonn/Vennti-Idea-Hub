@@ -46,7 +46,8 @@ export default class List extends Vue {
 			...this.ideaForm,
 			owner: {
 				id: auth.currentUser.uid,
-				displayName: auth.currentUser.displayName
+				displayName: auth.currentUser.displayName,
+				photoUrl: auth.currentUser.photoURL
 			},
 			status: AppTypes.Status.Open,
 			difficulty: AppTypes.Difficulty.Medium,
