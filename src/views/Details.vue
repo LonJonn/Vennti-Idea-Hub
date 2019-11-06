@@ -6,7 +6,7 @@
 			<li>benefit: {{ idea.benefit }}</li>
 			<li>skills required: {{ readableSkills }}</li>
 			<li>opened: {{ idea.createdAt.toDate() }}</li>
-			<li>likes: {{ idea.likesCount }}</li>
+			<li>difficylty: {{ readableDifficulty }}</li>
 			<li>status: {{ readableStatus }}</li>
 			<li>Owner: {{ idea.owner.name }}</li>
 			<button v-if="!userIsAssigned" @click="assignUser()" class="text-orange-600 my-3">Work on this</button>
@@ -24,7 +24,6 @@ import AppLikes from "@/components/Details/Likes.vue";
 import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
-import * as utils from "@/utils";
 
 @Component({ components: { AppLikes } })
 export default class Details extends Vue {
@@ -64,12 +63,12 @@ export default class Details extends Vue {
 			createdAt: firestore.Timestamp.now()
 		};
 
-		utils.subcollectionAdd(assignmentRef, newAssignment, "assignedCount");
+		await assignmentRef.set(newAssignment);
 	}
 
 	async unassignUser() {
 		const assignmentRef = this.ref.collection("assigned").doc(auth.currentUser.uid);
-		utils.subcollectionRemove(assignmentRef, "assignedCount");
+		await assignmentRef.delete();
 	}
 
 	// Computed
@@ -79,6 +78,10 @@ export default class Details extends Vue {
 
 	get readableStatus() {
 		return AppTypes.Status[this.idea.status];
+	}
+
+	get readableDifficulty() {
+		return AppTypes.Difficulty[this.idea.difficulty];
 	}
 
 	get userIsAssigned() {

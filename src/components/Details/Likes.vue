@@ -1,5 +1,6 @@
 <template>
 	<span class="mb-5">
+		<p>likes: {{ likes.length }}</p>
 		<button v-if="!userHasLiked" class="like" @click="addLike()">Like</button>
 		<button v-else class="like" @click="removeLike()">Unlike</button>
 		{{ recentLikes }}
@@ -11,7 +12,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
-import * as utils from "@/utils";
 
 @Component
 export default class LikesComponent extends Vue {
@@ -43,12 +43,12 @@ export default class LikesComponent extends Vue {
 			}
 		};
 
-		utils.subcollectionAdd(likeRef, newLike, "likesCount");
+		await likeRef.set(newLike);
 	}
 
 	async removeLike() {
 		const likeRef = this.ref.doc(auth.currentUser.uid);
-		utils.subcollectionRemove(likeRef, "likesCount");
+		await likeRef.delete();
 	}
 
 	// Computed

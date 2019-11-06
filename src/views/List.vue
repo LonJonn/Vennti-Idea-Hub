@@ -42,17 +42,21 @@ export default class List extends Vue {
 
 		if (!validTimeRange) throw new Error("Invalid time estimation.");
 
-		db.collection("ideas").add({
+		const newIdea: AppTypes.Idea = {
 			...this.ideaForm,
 			owner: {
 				id: auth.currentUser.uid,
-				name: auth.currentUser.displayName
+				displayName: auth.currentUser.displayName
 			},
-			assigned: [],
 			status: AppTypes.Status.Open,
+			difficulty: AppTypes.Difficulty.Medium,
 			createdAt: firestore.Timestamp.now(),
-			likesCount: 0
-		});
+			likesCount: 0,
+			assignedCount: 0,
+			commentCount: 0
+		};
+
+		db.collection("ideas").add(newIdea);
 
 		this.ideaForm = {
 			benefit: null,
