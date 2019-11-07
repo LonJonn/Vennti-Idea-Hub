@@ -14,22 +14,14 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
 import AppIdea from "@/components/Idea.vue";
 
 import { User, Idea } from "@/models";
 import { NewIdea } from "@/models/typings";
 
-import { State } from "vuex-class";
-
-import { firestore as fs } from "firebase/app";
-
-@Component({
-	components: { AppIdea }
-})
-export default class About extends Vue {
-	// Mapped Store
-	@State user: User;
-
+@Component({ components: { AppIdea } })
+export default class IdeasList extends Vue {
 	// Data
 	unsubscribe: () => void;
 	loading: boolean = true;
@@ -54,17 +46,22 @@ export default class About extends Vue {
 	}
 
 	// Methods
-	createIdea() {
-		Idea.create(this.ideaForm)
-			.then(() => {
-				this.ideaForm = {
-					benefit: null,
-					description: null,
-					skillsRequired: [],
-					timeEstimation: [null, null]
-				};
-			})
-			.catch(err => alert(err.message));
+	async createIdea() {
+		this.ideaForm.description += ["😈", "🎃", "👻", "👺"][Math.floor(Math.random() * 4)].repeat(
+			Math.floor(Math.random() * 3)
+		);
+
+		try {
+			await Idea.create(this.ideaForm);
+			this.ideaForm = {
+				benefit: null,
+				description: null,
+				skillsRequired: [],
+				timeEstimation: [null, null]
+			};
+		} catch (error) {
+			alert(error.message);
+		}
 	}
 }
 </script>
