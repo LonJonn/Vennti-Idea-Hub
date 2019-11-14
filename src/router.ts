@@ -23,6 +23,11 @@ const router = new Router({
 			}
 		},
 		{
+			path: "/ideas/new",
+			name: "create"
+			// component: () => import("./views/Details.vue")
+		},
+		{
 			path: "/ideas/:ideaId",
 			name: "details",
 			component: () => import("./views/Details.vue"),

@@ -1,19 +1,32 @@
 <template>
 	<div id="app">
-		<nav id="nav">
-			<router-link class="mr-2" to="/">Home</router-link>
-			<router-link to="/ideas">Ideas</router-link>
-		</nav>
-		<router-view />
+		<AppNavbar id="nav" />
+		<router-view id="main" />
+		<footer id="footer">Made by Lon XD</footer>
 	</div>
 </template>
 
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import AppNavbar from "@/components/Navbar/Navbar.vue";
+
+@Component({ components: { AppNavbar } })
+export default class App extends Vue {}
+</script>
+
 <style lang="postcss" scoped>
 #app {
-	@apply m-5;
+	@apply flex flex-col h-screen;
+	@apply text-gray-900;
 }
 
-#nav > a.router-link-exact-active {
-	@apply text-blue-500 font-semibold;
+#main {
+	@apply flex-grow mx-5 max-w-xl;
+}
+
+#footer {
+	@apply py-4;
+	@apply bg-gray-800 text-white;
+	@apply text-center;
 }
 </style>
