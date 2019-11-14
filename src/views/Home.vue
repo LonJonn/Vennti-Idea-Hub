@@ -64,10 +64,19 @@ export default class Home extends Vue {
 	}
 
 	async updateProfile() {
-		auth.currentUser.updateProfile({ displayName: this.user.displayName });
+		const { currentUser } = auth;
+
+		currentUser.updateProfile({ displayName: this.user.displayName });
+		db.collection("users")
+			.doc(currentUser.uid)
+			.update({
+				displayName: this.user.displayName
+			});
+
 		this.currentName = this.user.displayName;
 	}
 
+	// Computed
 	get displayNameHasChanged() {
 		return this.user.displayName !== this.currentName;
 	}

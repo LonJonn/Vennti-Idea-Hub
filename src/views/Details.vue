@@ -4,11 +4,11 @@
 		<div v-else class="mb-5 list text-blue-800 p-5">
 			<li>description: {{ idea.description }}</li>
 			<li>benefit: {{ idea.benefit }}</li>
-			<li>skills required: {{ readableSkills }}</li>
+			<li>skills required: {{ idea.skillsRequired.join(", ") || "None" }}</li>
 			<li>opened: {{ idea.createdAt.toDate() }}</li>
-			<li>difficylty: {{ readableDifficulty }}</li>
-			<li>status: {{ readableStatus }}</li>
-			<li>Owner: {{ idea.owner.name }}</li>
+			<li>difficulty: {{ idea.difficulty }}</li>
+			<li>status: {{ idea.status }}</li>
+			<li>Owner: {{ idea.owner.displayName }}</li>
 			<button v-if="!userIsAssigned" @click="assignUser()" class="text-orange-600 my-3">Work on this</button>
 			<button v-else @click="unassignUser()" class="text-orange-600 my-3">GET ME OUT!!!</button>
 			<br />
@@ -75,18 +75,6 @@ export default class Details extends Vue {
 	}
 
 	// Computed
-	get readableSkills() {
-		return this.idea.skillsRequired.map(skill => AppTypes.Skill[skill]).join(", ") || "None";
-	}
-
-	get readableStatus() {
-		return AppTypes.Status[this.idea.status];
-	}
-
-	get readableDifficulty() {
-		return AppTypes.Difficulty[this.idea.difficulty];
-	}
-
 	get userIsAssigned() {
 		return this.assigned.some(assigment => assigment.owner.id === auth.currentUser.uid);
 	}
