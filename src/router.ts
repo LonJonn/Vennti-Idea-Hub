@@ -24,13 +24,19 @@ const router = new Router({
 		},
 		{
 			path: "/ideas/new",
-			name: "create"
-			// component: () => import("./views/Details.vue")
+			name: "create",
+			component: () => import("./views/Create.vue")
 		},
 		{
 			path: "/ideas/:ideaId",
 			name: "details",
 			component: () => import("./views/Details.vue"),
+			props: true
+		},
+		{
+			path: "/ideas/:ideaId/edit",
+			name: "details",
+			component: () => import("./views/Edit.vue"),
 			props: true
 		},
 		{

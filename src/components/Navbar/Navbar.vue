@@ -48,8 +48,8 @@ nav {
 .logo::before {
 	content: "";
 	opacity: 80%;
-	right: -0.3rem;
-	bottom: -0.3rem;
+	right: -0.1rem;
+	bottom: -0.2rem;
 	@apply absolute;
 	@apply w-4 h-4;
 	@apply bg-orange-300;
