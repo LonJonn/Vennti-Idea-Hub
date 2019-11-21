@@ -13,7 +13,7 @@
 			<button v-else @click="unassignUser()" class="text-orange-600 my-3">GET ME OUT!!!</button>
 			<br />
 			<AppLikes :ideaId="idea.id" />
-			<button class="button bg-red-500 float-right" @click="remove()">Delete</button>
+			<router-link to="edit" append class="text-blue-500 float-right">Edit</router-link>
 			<AppComments :ideaId="idea.id" />
 		</div>
 	</div>

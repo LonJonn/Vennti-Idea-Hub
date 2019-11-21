@@ -6,19 +6,59 @@
 			<router-link to="/ideas">Ideas</router-link>
 		</div>
 		<div class="right">
-			<router-link to="/ideas/new">Create</router-link>
+			<a v-if="!user" @click="login()">Login</a>
+			<AppDropdown :title="greeting" v-else :right="true">
+				<span>Test</span>
+				<a @click="logout()">Log out</a>
+			</AppDropdown>
 		</div>
 	</nav>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import * as AppTypes from "@/typings";
+import { auth, authProviders, db } from "@/firebase";
+import AppDropdown from "@/components/Navbar/NavDropdown.vue";
 
-@Component
+// Move to cloud function
+async function register(user: firebase.User) {
+	await db
+		.collection("users")
+		.doc(user.uid)
+		.set({
+			name: user.displayName,
+			profileIcon: user.photoURL,
+			skills: [],
+			likeCount: 0,
+			commentCount: 0,
+			assigned: 0
+		});
+}
+
+@Component({ components: { AppDropdown } })
 export default class NavbarComponent extends Vue {
-	// Props
-	@Prop() idea: AppTypes.Idea;
+	// State
+	user = { ...auth.currentUser };
+
+	// Methods
+	async login() {
+		const res = await auth.signInWithPopup(authProviders.google);
+		this.user = res.user;
+
+		if (res.additionalUserInfo.isNewUser) await register(res.user);
+	}
+
+	async logout() {
+		auth.signOut();
+		this.user = null;
+		this.$router.push("/");
+	}
+
+	// Computed
+	get greeting() {
+		return `Welcome, ${this.user.displayName.split(" ")[0]}`;
+	}
 }
 </script>
 
