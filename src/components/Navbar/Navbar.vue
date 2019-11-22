@@ -6,10 +6,14 @@
 			<router-link to="/ideas">Ideas</router-link>
 		</div>
 		<div class="right">
-			<a v-if="!user" @click="login()">Login</a>
+			<AppButton v-if="!user" @click="login()">Login</AppButton>
 			<AppDropdown :title="greeting" v-else :right="true">
-				<span>Test</span>
+				<router-link to="/profile">Edit Profile</router-link>
+				<router-link to="/settings">Settings</router-link>
+				<hr />
 				<a @click="logout()">Log out</a>
+				<hr />
+				<span>Version: 👺</span>
 			</AppDropdown>
 		</div>
 	</nav>
@@ -19,7 +23,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import * as AppTypes from "@/typings";
 import { auth, authProviders, db } from "@/firebase";
-import AppDropdown from "@/components/Navbar/NavDropdown.vue";
+import AppDropdown from "@/components/Base/Dropdown.vue";
+import AppButton from "@/components/Base/Button.vue";
 
 // Move to cloud function
 async function register(user: firebase.User) {
@@ -36,7 +41,7 @@ async function register(user: firebase.User) {
 		});
 }
 
-@Component({ components: { AppDropdown } })
+@Component({ components: { AppDropdown, AppButton } })
 export default class NavbarComponent extends Vue {
 	// State
 	user = { ...auth.currentUser };
