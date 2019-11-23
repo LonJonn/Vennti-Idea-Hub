@@ -18,7 +18,6 @@ const requireComponent = require.context("./components/Base", false, /\.vue$/);
 for (const filename of requireComponent.keys()) {
 	const componentConfig = requireComponent(filename);
 	const componentName = `App${filename.substr(2, filename.length - 6)}`;
-	console.log(componentName);
 	Vue.component(componentName, componentConfig.default || componentConfig);
 }
 

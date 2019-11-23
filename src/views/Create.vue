@@ -8,7 +8,7 @@
 			<input v-model.number="ideaForm.timeEstimation[0]" placeholder="minimum hours" type="number" />
 			<input v-model.number="ideaForm.timeEstimation[1]" placeholder="maximum hours" type="number" />
 		</div>
-		<button @click="add()" class="my-3 px-5 py-1 text-white bg-blue-500 rounded">Add</button>
+		<AppButton @click="add()">Add</AppButton>
 	</div>
 </template>
 
@@ -62,6 +62,11 @@ export default class Create extends Vue {
 
 <style lang="postcss" scoped>
 .form > input {
-	@apply mt-3 py-1 px-2 bg-gray-200 rounded block;
+	@apply block mt-3 py-1 px-2;
+	@apply bg-gray-200 rounded;
+}
+
+button {
+	@apply mt-2 px-8;
 }
 </style>

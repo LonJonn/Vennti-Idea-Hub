@@ -69,12 +69,12 @@ export default class NavbarComponent extends Vue {
 
 <style lang="postcss" scoped>
 nav {
-	@apply flex items-center w-screen max-w-6xl mx-auto p-5;
-	@apply text-lg;
+	@apply flex fixed h-16 w-screen items-center px-4;
+	@apply bg-white border-gray-200 border-b-2;
 }
 
 .logo {
-	@apply relative mr-5;
+	@apply relative mr-6;
 	@apply font-bold text-3xl;
 	@apply tracking-tighter;
 }
@@ -86,7 +86,7 @@ nav {
 	bottom: 0;
 	@apply absolute;
 	@apply w-6 h-6;
-	@apply bg-orange-500;
+	@apply bg-primary-500;
 	@apply rounded-full;
 }
 
@@ -97,12 +97,12 @@ nav {
 	bottom: -0.2rem;
 	@apply absolute;
 	@apply w-4 h-4;
-	@apply bg-orange-300;
+	@apply bg-primary-300;
 	@apply rounded-full;
 }
 
 nav a.router-link-exact-active {
-	@apply text-green-500;
+	@apply text-primary-500;
 }
 
 .left {

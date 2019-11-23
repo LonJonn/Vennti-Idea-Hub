@@ -3,7 +3,7 @@
 		<div id="title" class="flex items-center">
 			<span>{{ title }}</span>
 			<svg
-				class="h-6 ml-2 text-green-500 fill-current"
+				class="h-6 ml-2 text-primary-500 fill-current"
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 20 20"
 			>
@@ -68,7 +68,7 @@ export default class DropdownComponent extends Vue {
 
 hr {
 	@apply my-2 py-0 !important;
-	@apply border border-gray-200;
+	@apply border border-gray-100;
 }
 
 #dropmenu * {
@@ -82,8 +82,8 @@ hr {
 }
 
 #dropdown:hover #title {
-	@apply text-green-600;
-	@apply bg-green-100;
+	@apply text-primary-600;
+	@apply bg-primary-100;
 }
 
 a {
@@ -91,7 +91,7 @@ a {
 }
 
 #dropmenu a:hover {
-	@apply text-green-500 bg-green-100;
+	@apply text-primary-500 bg-primary-100;
 }
 </style>
 

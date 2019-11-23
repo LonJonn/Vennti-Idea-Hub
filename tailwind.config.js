@@ -1,10 +1,16 @@
+const { colors } = require("tailwindcss/defaultTheme");
+colors.orange[100] = "#FFF5E3";
+
 module.exports = {
 	theme: {
 		container: {
 			center: true,
-			padding: "2rem"
+			padding: "1rem"
 		},
 		extend: {
+			colors: {
+				primary: colors.orange
+			},
 			boxShadow: {
 				// lg:
 				// 	"0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)",
