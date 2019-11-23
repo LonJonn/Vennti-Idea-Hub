@@ -3,16 +3,16 @@
 }
 
 #logo {
-	@apply relative text-6xl font-bold tracking-tight;
-	@apply text-center;
+	@apply relative text-6xl font-bold tracking-tighter;
 
-	margin-top: 35vh;
+	width: max-content;
+	margin: 35vh auto 0;
 }
 
 #logo::after {
 	content: "";
 	opacity: 70%;
-	left: 13.625em;
+	right: -0.75em;
 	bottom: -0.15em;
 	@apply absolute;
 	@apply w-16 h-16;
@@ -23,7 +23,7 @@
 #logo::before {
 	content: "";
 	opacity: 80%;
-	left: 13.375em;
+	right: -0.25em;
 	bottom: -0.25em;
 	@apply absolute;
 	@apply w-12 h-12;
