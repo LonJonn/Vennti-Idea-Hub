@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import { auth } from "@/firebase";
+import { auth, authProviders } from "@/firebase";
 
 Vue.use(Router);
 
@@ -25,7 +25,10 @@ const router = new Router({
 		{
 			path: "/ideas/new",
 			name: "create",
-			component: () => import("./views/Create.vue")
+			component: () => import("./views/Create.vue"),
+			meta: {
+				requiresAuth: true
+			}
 		},
 		{
 			path: "/ideas/:ideaId",
@@ -35,7 +38,7 @@ const router = new Router({
 		},
 		{
 			path: "/ideas/:ideaId/edit",
-			name: "details",
+			name: "edit",
 			component: () => import("./views/Edit.vue"),
 			props: true
 		},
@@ -50,8 +53,7 @@ router.beforeEach((to, from, next) => {
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
 	if (requiresAuth && !auth.currentUser) {
-		alert("auth required!");
-		router.push("/");
+		auth.signInWithPopup(authProviders.google);
 	} else {
 		next();
 	}

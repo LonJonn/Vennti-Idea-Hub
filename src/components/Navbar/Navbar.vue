@@ -1,13 +1,13 @@
 <template>
 	<nav>
-		<span class="logo">Venntiboard</span>
+		<router-link to="/" tag="span" class="logo">Venntiboard</router-link>
 		<div class="left">
-			<router-link to="/">Home</router-link>
 			<router-link to="/ideas">Ideas</router-link>
+			<router-link to="/ideas/new">Create</router-link>
 		</div>
 		<div class="right">
-			<AppButton v-if="!user" @click="login()">Login</AppButton>
-			<AppDropdown :title="greeting" v-else :right="true">
+			<AppButton v-if="!user" @click.native="login()">Login</AppButton>
+			<AppDropdown v-else :title="greeting" :right="true">
 				<router-link to="/profile">Edit Profile</router-link>
 				<router-link to="/settings">Settings</router-link>
 				<hr />
@@ -23,8 +23,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import * as AppTypes from "@/typings";
 import { auth, authProviders, db } from "@/firebase";
-import AppDropdown from "@/components/Base/Dropdown.vue";
-import AppButton from "@/components/Base/Button.vue";
 
 // Move to cloud function
 async function register(user: firebase.User) {
@@ -41,10 +39,10 @@ async function register(user: firebase.User) {
 		});
 }
 
-@Component({ components: { AppDropdown, AppButton } })
+@Component
 export default class NavbarComponent extends Vue {
 	// State
-	user = { ...auth.currentUser };
+	user = auth.currentUser;
 
 	// Methods
 	async login() {
@@ -54,10 +52,10 @@ export default class NavbarComponent extends Vue {
 		if (res.additionalUserInfo.isNewUser) await register(res.user);
 	}
 
-	async logout() {
+	logout() {
 		auth.signOut();
 		this.user = null;
-		this.$router.push("/");
+		this.$router.push("/").catch(() => {});
 	}
 
 	// Computed
@@ -75,8 +73,8 @@ nav {
 
 .logo {
 	@apply relative mr-6;
-	@apply font-bold text-3xl;
-	@apply tracking-tighter;
+	@apply font-bold text-2xl;
+	@apply tracking-tighter cursor-pointer;
 }
 
 .logo::after {
