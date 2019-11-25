@@ -19,7 +19,11 @@
 			/>
 
 			<label class="label">Difficulty</label>
-			<AppSelect v-model="ideaForm.difficulty" class="input" :options="['Easy', 'Medium', 'Hard']"></AppSelect>
+			<select v-model="ideaForm.difficulty" class="input">
+				<option value="Easy">Easy</option>
+				<option value="Medium">Medium</option>
+				<option value="Hard">Hard</option>
+			</select>
 
 			<div class="hours">
 				<div>
@@ -57,7 +61,7 @@ import * as AppTypes from "@/typings";
 export default class Create extends Vue {
 	// State
 	ideaForm: AppTypes.IdeaNew = {
-		difficulty: "Medium",
+		difficulty: null,
 		benefit: null,
 		description: null,
 		skillsRequired: [],
@@ -81,7 +85,6 @@ export default class Create extends Vue {
 				photoUrl: auth.currentUser.photoURL
 			},
 			status: "Open",
-			difficulty: "Medium",
 			createdAt: firestore.Timestamp.now(),
 			likesCount: 0,
 			assignedCount: 0,
@@ -97,7 +100,11 @@ export default class Create extends Vue {
 
 <style lang="postcss" scoped>
 button {
-	@apply rounded-md mt-2 px-12 text-xl py-2 bg-green-300 text-green-700 w-full;
+	@apply rounded-md mt-2 px-12 text-xl py-2 bg-green-300 text-green-700 w-full shadow-md;
+}
+
+button:hover {
+	@apply bg-green-400 text-green-700 shadow-lg;
 }
 
 .label {
@@ -116,8 +123,12 @@ button {
 	transition-timing-function: ease-in-out;
 }
 
+select.input {
+	height: 46px;
+}
+
 .input:focus {
-	@apply bg-white border-primary-500;
+	@apply bg-white border-primary-500 shadow-md;
 }
 
 .hours {

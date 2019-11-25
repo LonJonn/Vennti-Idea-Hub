@@ -109,7 +109,7 @@ nav a.router-link-exact-active {
 }
 
 .left > a {
-	@apply mr-2;
+	@apply mr-4;
 }
 
 .right > a {
