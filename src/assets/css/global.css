@@ -1,0 +1,11 @@
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+	outline: none;
+}
+
+
+h1 {
+    @apply text-3xl font-bold mb-2;
+}

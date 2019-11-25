@@ -1,6 +1,6 @@
 <template>
-	<div class="container max-w-2xl">
-		<h1 class="text-3xl font-bold mb-4">Create</h1>
+	<div>
+		<h1>Create</h1>
 		<form @submit.prevent>
 			<label class="label">Benefit</label>
 			<input

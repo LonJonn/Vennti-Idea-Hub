@@ -1,9 +1,12 @@
 <template>
-	<div class="mb-5">
-		<div class="bg-gray-300 rounded text-blue-800 p-5">
-			<li>Description: {{ idea.description }}</li>
-			<li>Owner: {{ idea.owner.displayName }}</li>
-			<router-link :to="'ideas/' + idea.id" class="button mt-12 bg-pink-500">Details</router-link>
+	<div class="card">
+		<router-link tag="h2" :to="'ideas/' + idea.id">{{ idea.benefit }}</router-link>
+		<div class="text-gray-600 font-light flex">
+			<span class="flex-grow">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
+			<router-link :to="'/users/' + idea.owner.id" class="user">
+				<img :src="idea.owner.photoUrl" class="rounded-full w-6 mr-2" />
+				{{ idea.owner.displayName }}
+			</router-link>
 		</div>
 	</div>
 </template>
@@ -20,7 +23,31 @@ export default class IdeaComponent extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-.button {
-	@apply text-lg text-white font-semibold px-6 py-1 rounded;
+h2 {
+	@apply cursor-pointer font-semibold text-2xl mb-2;
+}
+
+h2:hover {
+	@apply underline;
+}
+
+.card {
+	@apply mt-8 rounded-lg bg-white shadow-full py-3 px-5;
+
+	transition-duration: 0.2s;
+	transition-property: box-shadow;
+	transition-timing-function: ease-in-out;
+}
+
+.card:hover {
+	@apply shadow-xl;
+}
+
+.user {
+	@apply flex items-center text-lg cursor-pointer;
+}
+
+.user:hover {
+	@apply text-blue-500 underline;
 }
 </style>

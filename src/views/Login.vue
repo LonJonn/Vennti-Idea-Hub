@@ -2,13 +2,13 @@
 	<div class="text-center mt-8">
 		<AppAlert v-if="warn" type="danger" class="mb-8">You need to be logged in to view this page!</AppAlert>
 		<div v-if="user">
-			<h1 class="text-3xl font-bold">You're already logged in 🥳</h1>
-			<h2 class="text-md mb-8">You can log out below</h2>
+			<h1>You're already logged in 🥳</h1>
+			<h3 class="text-md mb-8">You can log out below</h3>
 			<AppButton @click.native="logout()" class="login-button">Log out</AppButton>
 		</div>
 		<div v-else>
-			<h1 class="text-3xl font-bold">Log in</h1>
-			<h2 class="text-md mb-8">Please log in using your Venntifact account</h2>
+			<h1>Log in</h1>
+			<h3 class="text-md mb-8">Please log in using your Venntifact account</h3>
 			<AppButton @click.native="login()" class="login-button">
 				<span class="flex items-center">
 					<span class="w-6 mr-2">
@@ -56,6 +56,12 @@ export default class Login extends Vue {
 
 		if (res.additionalUserInfo.isNewUser) await console.log(res.user);
 		this.$router.push((this.$route.query.redirect as string) || "/");
+	}
+
+	// Methods
+	logout() {
+		auth.signOut();
+		this.$router.push("/");
 	}
 
 	// Computed
