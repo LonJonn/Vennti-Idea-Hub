@@ -55,7 +55,7 @@ export default class NavbarComponent extends Vue {
 	logout() {
 		auth.signOut();
 		this.user = null;
-		this.$router.push("/").catch(() => {});
+		if (this.$route.name !== "home") this.$router.push("/");
 	}
 
 	// Computed

@@ -43,6 +43,11 @@ const router = new Router({
 			props: true
 		},
 		{
+			path: "/login",
+			name: "login",
+			component: () => import("./views/Login.vue")
+		},
+		{
 			path: "*",
 			name: "404"
 		}
@@ -53,7 +58,7 @@ router.beforeEach((to, from, next) => {
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
 	if (requiresAuth && !auth.currentUser) {
-		auth.signInWithPopup(authProviders.google);
+		router.push({ name: "login", query: { "auth-required": null, redirect: to.path } });
 	} else {
 		next();
 	}

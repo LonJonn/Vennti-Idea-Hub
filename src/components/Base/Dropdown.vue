@@ -68,7 +68,7 @@ export default class DropdownComponent extends Vue {
 
 hr {
 	@apply my-2 py-0 !important;
-	@apply border border-gray-100;
+	@apply border border-gray-200;
 }
 
 #dropmenu * {
