@@ -8,6 +8,10 @@ import { db, auth } from "@/firebase";
 import { firestorePlugin } from "vuefire";
 Vue.use(firestorePlugin);
 
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+Vue.component("v-select", vSelect);
+
 db.enablePersistence();
 auth.setPersistence("local");
 
