@@ -1,10 +1,15 @@
 <template>
-	<div>
-		<AppAlert v-if="warn" type="danger" class="mt-4">You need to be logged in to view this page!</AppAlert>
-		<div class="text-center mt-8">
-			<h1 class="text-3xl font-bold mb-2">Sign in</h1>
-			<h2 class="text-md mb-4">Please sign in using your Venntifact account</h2>
-			<AppButton @click.native="login()" class="login-button relative">
+	<div class="text-center mt-8">
+		<AppAlert v-if="warn" type="danger" class="mb-8">You need to be logged in to view this page!</AppAlert>
+		<div v-if="user">
+			<h1 class="text-3xl font-bold">You're already logged in 🥳</h1>
+			<h2 class="text-md mb-8">You can log out below</h2>
+			<AppButton @click.native="logout()" class="login-button">Log out</AppButton>
+		</div>
+		<div v-else>
+			<h1 class="text-3xl font-bold">Log in</h1>
+			<h2 class="text-md mb-8">Please log in using your Venntifact account</h2>
+			<AppButton @click.native="login()" class="login-button">
 				<span class="flex items-center">
 					<span class="w-6 mr-2">
 						<svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +34,7 @@
 							/>
 						</svg>
 					</span>
-					<span class="text-lg">Sign in with Google</span>
+					Sign in with Google
 				</span>
 			</AppButton>
 		</div>
@@ -42,6 +47,9 @@ import { auth, authProviders, db } from "@/firebase";
 
 @Component
 export default class Login extends Vue {
+	// State
+	user = auth.currentUser;
+
 	// Methods
 	async login() {
 		const res = await auth.signInWithPopup(authProviders.google);
@@ -59,8 +67,9 @@ export default class Login extends Vue {
 
 <style lang="postcss" scoped>
 .login-button {
+	@apply relative;
 	@apply block mx-auto mt-4 px-20 py-3;
-	@apply bg-white text-gray-700;
+	@apply bg-white text-gray-700 text-lg;
 	@apply border border-gray-500;
 	@apply shadow-md;
 }

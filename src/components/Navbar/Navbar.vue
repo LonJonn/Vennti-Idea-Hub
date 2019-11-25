@@ -6,7 +6,7 @@
 			<router-link to="/ideas/new">Create</router-link>
 		</div>
 		<div class="right">
-			<AppButton v-if="!user" @click.native="login()">Login</AppButton>
+			<AppButton v-if="!user" @click.native="login()">Log in</AppButton>
 			<AppDropdown v-else :title="greeting" :right="true">
 				<router-link to="/profile">Edit Profile</router-link>
 				<router-link to="/settings">Settings</router-link>
@@ -69,6 +69,7 @@ export default class NavbarComponent extends Vue {
 nav {
 	@apply flex fixed h-16 w-screen items-center px-4;
 	@apply bg-white border-gray-200 border-b-2;
+	@apply text-lg;
 }
 
 .logo {

@@ -1,7 +1,9 @@
 <template>
-	<div id="app">
+	<div id="app" class="text-gray-900 w-full">
 		<AppNavbar id="nav" />
-		<router-view id="main" class="w-full max-w-screen-xl mx-auto px-6 text-gray-900 pt-20" />
+		<div class="max-w-screen-xl mx-auto px-6 pt-20">
+			<router-view id="main" />
+		</div>
 	</div>
 </template>
 

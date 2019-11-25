@@ -20,7 +20,7 @@ export default class Alert extends Vue {
 
 <style lang="postcss" scoped>
 .alert {
-	@apply py-3 px-6;
+	@apply py-3 px-12;
 	@apply rounded-md border;
 }
 
