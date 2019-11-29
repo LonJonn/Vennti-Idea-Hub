@@ -32,15 +32,16 @@ h2:hover {
 }
 
 .card {
-	@apply mt-8 rounded-lg bg-white shadow-full py-3 px-5;
+	@apply mt-8 rounded-lg bg-white shadow-xl py-3 px-5;
 
 	transition-duration: 0.2s;
-	transition-property: box-shadow;
+	transition-property: box-shadow, transform;
 	transition-timing-function: ease-in-out;
 }
 
 .card:hover {
-	@apply shadow-xl;
+	@apply shadow-lifted;
+	transform: scale(1.0125);
 }
 
 .user {

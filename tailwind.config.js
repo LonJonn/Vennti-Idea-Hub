@@ -16,7 +16,9 @@ module.exports = {
 				xl: "0 10px 20px 0 rgba(0,13,36,.16), 0 2px 8px 0 rgba(0,13,36,.08)",
 				inner: "inset 0 0 12px rgba(0,0,0,.3)",
 				full: "0 2px 16px rgba(0, 0, 0, 0.15)",
-				lifted: "0 7px 14px rgba(0,0,0,.12), 0 3px 6px rgba(0,0,0,.08)"
+				// lifted: "0 7px 14px rgba(0,0,0,.12), 0 3px 6px rgba(0,0,0,.08)"
+				lifted:
+					"0 13px 27px -5px rgba(50,50,93,.25), 0 8px 16px -8px rgba(0,0,0,.3), 0 -6px 16px -6px rgba(0,0,0,.025)"
 			},
 			borderRadius: {
 				md: "0.375rem",

@@ -5,7 +5,26 @@ button:focus {
 	outline: none;
 }
 
-
 h1 {
-    @apply text-3xl font-bold mb-2;
+    @apply text-3xl font-bold mb-4;
+}
+
+.label {
+	@apply block mb-1;
+	@apply text-gray-700;
+	@apply text-xs font-bold tracking-wide uppercase;
+}
+
+.input {
+	@apply appearance-none block w-full px-4 py-3;
+	@apply bg-gray-200 text-gray-700 border-gray-200;
+	@apply rounded border leading-tight outline-none font-light tracking-wide;
+
+	transition-duration: 0.2s;
+	transition-property: background-color, color, border;
+	transition-timing-function: ease-in-out;
+}
+
+.input:focus {
+	@apply bg-white border-primary-500;
 }

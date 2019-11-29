@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="max-w-2xl">
 		<h1>Create</h1>
 		<form @submit.prevent>
 			<label class="label">Benefit</label>
@@ -107,28 +107,12 @@ button:hover {
 	@apply bg-green-400 text-green-700 shadow-lg;
 }
 
-.label {
-	@apply block mb-1;
-	@apply text-gray-700;
-	@apply text-xs font-bold tracking-wide uppercase;
-}
-
 .input {
-	@apply appearance-none block w-full mb-8 px-4 py-3;
-	@apply bg-gray-200 text-gray-700 border-gray-200;
-	@apply rounded border leading-tight outline-none font-light tracking-wide;
-
-	transition-duration: 0.2s;
-	transition-property: background-color, color, box-shadow, border;
-	transition-timing-function: ease-in-out;
+	@apply mb-8;
 }
 
 select.input {
 	height: 46px;
-}
-
-.input:focus {
-	@apply bg-white border-primary-500 shadow-md;
 }
 
 .hours {
