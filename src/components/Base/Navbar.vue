@@ -6,7 +6,7 @@
 			<router-link to="/ideas/new">Create</router-link>
 		</div>
 		<div class="right">
-			<AppButton v-if="!user" @click.native="login()">Log in</AppButton>
+			<AppButton v-if="!user" @click.native="signInAction()">Log in</AppButton>
 			<AppDropdown v-else :title="greeting" :right="true">
 				<router-link to="/profile">Edit Profile</router-link>
 				<router-link to="/settings">Settings</router-link>
@@ -21,40 +21,18 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import * as AppTypes from "@/typings";
-import { auth, authProviders, db } from "@/firebase";
-
-// Move to cloud function
-async function register(user: firebase.User) {
-	await db
-		.collection("users")
-		.doc(user.uid)
-		.set({
-			name: user.displayName,
-			profileIcon: user.photoURL,
-			skills: [],
-			likeCount: 0,
-			commentCount: 0,
-			assigned: 0
-		});
-}
+import { State, Action } from "vuex-class";
 
 @Component
 export default class NavbarComponent extends Vue {
-	// State
-	user = auth.currentUser;
+	// Store
+	@State user: firebase.User;
+	@Action signInAction: () => Promise<void>;
+	@Action signOutAction: () => Promise<void>;
 
 	// Methods
-	async login() {
-		const res = await auth.signInWithPopup(authProviders.google);
-		this.user = res.user;
-
-		if (res.additionalUserInfo.isNewUser) await register(res.user);
-	}
-
 	logout() {
-		auth.signOut();
-		this.user = null;
+		this.signOutAction();
 		if (this.$route.name !== "home") this.$router.push("/");
 	}
 
@@ -67,8 +45,8 @@ export default class NavbarComponent extends Vue {
 
 <style lang="postcss" scoped>
 nav {
-	@apply flex fixed h-16 w-screen items-center px-4;
-	@apply bg-white border-gray-200 border-b-2;
+	@apply flex items-center pt-4 pb-12;
+	@apply bg-white;
 	@apply text-lg;
 }
 

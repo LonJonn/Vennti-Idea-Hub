@@ -1,6 +1,10 @@
 <template>
 	<div class="text-center mt-8">
-		<AppAlert v-if="warn" type="danger" class="mb-8">You need to be logged in to view this page!</AppAlert>
+		<AppAlert
+			v-if="authRequired"
+			type="danger"
+			class="mb-8"
+		>You need to be logged in to view this page!</AppAlert>
 		<div v-if="user">
 			<h1>You're already logged in 🥳</h1>
 			<h3 class="text-md mb-8">You can log out below</h3>
@@ -42,30 +46,29 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { auth, authProviders, db } from "@/firebase";
+import { Component, Vue } from "vue-property-decorator";
+import { State, Action } from "vuex-class";
 
 @Component
 export default class Login extends Vue {
-	// State
-	user = auth.currentUser;
+	// Store
+	@State user: firebase.User;
+	@Action signInAction: () => Promise<void>;
+	@Action signOutAction: () => Promise<void>;
 
 	// Methods
 	async login() {
-		const res = await auth.signInWithPopup(authProviders.google);
-
-		if (res.additionalUserInfo.isNewUser) await console.log(res.user);
+		await this.signInAction();
 		this.$router.push((this.$route.query.redirect as string) || "/");
 	}
 
-	// Methods
 	logout() {
-		auth.signOut();
-		this.$router.push("/");
+		this.signOutAction();
+		if (this.$route.name !== "home") this.$router.push("/");
 	}
 
 	// Computed
-	get warn() {
+	get authRequired() {
 		return Object.keys(this.$route.query).includes("auth-required");
 	}
 }
