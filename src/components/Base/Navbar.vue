@@ -7,7 +7,9 @@
 		</div>
 		<div class="right">
 			<AppButton v-if="!user" @click.native="signInAction()">Log in</AppButton>
-			<AppDropdown v-else :title="greeting" :right="true">
+			<AppDropdown v-else title="Menu" :right="true">
+				<span class="font-semibold">Welcome, {{ this.user.displayName.split(" ")[0] }}</span>
+				<hr />
 				<router-link to="/profile">Edit Profile</router-link>
 				<router-link to="/settings">Settings</router-link>
 				<hr />
@@ -30,15 +32,15 @@ export default class NavbarComponent extends Vue {
 	@Action signInAction: () => Promise<void>;
 	@Action signOutAction: () => Promise<void>;
 
+	async login() {
+		await this.signInAction();
+		this.$router.push((this.$route.query.redirect as string) || "/");
+	}
+
 	// Methods
 	logout() {
 		this.signOutAction();
 		if (this.$route.name !== "home") this.$router.push("/");
-	}
-
-	// Computed
-	get greeting() {
-		return `Welcome, ${this.user.displayName.split(" ")[0]}`;
 	}
 }
 </script>
@@ -61,6 +63,7 @@ nav {
 	opacity: 70%;
 	right: -1rem;
 	bottom: 0;
+
 	@apply absolute;
 	@apply w-6 h-6;
 	@apply bg-primary-500;
@@ -72,6 +75,7 @@ nav {
 	opacity: 80%;
 	right: -0.1rem;
 	bottom: -0.2rem;
+
 	@apply absolute;
 	@apply w-4 h-4;
 	@apply bg-primary-300;

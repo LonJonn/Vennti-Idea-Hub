@@ -33,12 +33,13 @@ export default class DropdownComponent extends Vue {
 
 <style lang="postcss" scoped>
 #dropdown {
-	@apply relative;
+	@apply relative z-50;
 }
 
 #menucontainer {
 	@apply absolute;
 	top: 100%;
+	min-width: 10em;
 }
 
 .right-aligned {
@@ -75,7 +76,8 @@ hr {
 	@apply px-4 py-1;
 }
 
-#dropdown:hover #dropmenu {
+#dropdown:hover #dropmenu,
+#dropdown:focus-within #dropmenu {
 	@apply py-2;
 
 	max-height: 100vh;

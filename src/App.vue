@@ -1,9 +1,7 @@
 <template>
-	<div id="app" class="text-gray-900 w-full">
+	<div id="app" class="container lg:max-w-5xl">
 		<AppNavbar id="nav" />
-		<div id="main" class="max-w-screen-xl mx-auto px-6 pt-24">
-			<router-view class="container" />
-		</div>
+		<router-view />
 	</div>
 </template>
 
