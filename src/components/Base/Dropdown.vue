@@ -1,12 +1,8 @@
 <template>
 	<div id="dropdown">
-		<div id="title" class="flex items-center">
+		<div id="title">
 			<span>{{ title }}</span>
-			<svg
-				class="h-6 ml-2 text-primary-500 fill-current"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 20 20"
-			>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 				<path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
 			</svg>
 		</div>
@@ -48,12 +44,17 @@ export default class DropdownComponent extends Vue {
 }
 
 #title {
+	@apply flex items-center;
 	@apply px-3 py-1;
 	@apply rounded-lg;
 
 	transition-duration: 0.2s;
 	transition-property: background-color, color;
 	transition-timing-function: ease-in-out;
+}
+
+#title > svg {
+	@apply h-6 ml-1 -mr-2 text-primary-500 fill-current;
 }
 
 #dropmenu {

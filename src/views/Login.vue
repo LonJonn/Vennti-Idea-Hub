@@ -77,7 +77,7 @@ export default class Login extends Vue {
 <style lang="postcss" scoped>
 .login-button {
 	@apply relative;
-	@apply block mx-auto mt-4 px-20 py-3;
+	@apply block mx-auto mt-4 px-16 py-3;
 	@apply bg-white text-gray-700 text-lg;
 	@apply border border-gray-500;
 	@apply shadow-md;

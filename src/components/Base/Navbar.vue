@@ -1,6 +1,7 @@
 <template>
 	<nav>
-		<router-link to="/" tag="span" class="logo">Venntiboard</router-link>
+		<router-link to="/" tag="span" class="logo hidden sm:block">Venntiboard</router-link>
+		<router-link to="/" tag="span" class="logo block: sm:hidden">VB</router-link>
 		<div class="left">
 			<router-link to="/ideas">Ideas</router-link>
 			<router-link to="/ideas/new">Create</router-link>
@@ -47,9 +48,7 @@ export default class NavbarComponent extends Vue {
 
 <style lang="postcss" scoped>
 nav {
-	@apply flex items-center pt-4 pb-12;
-	@apply bg-white;
-	@apply text-lg;
+	@apply flex items-center pt-4 pb-8;
 }
 
 .logo {
@@ -91,10 +90,21 @@ nav a.router-link-exact-active {
 }
 
 .left > a {
-	@apply mr-4;
+	@apply mr-2;
 }
 
 .right > a {
 	@apply ml-2;
+}
+
+@screen sm {
+	nav {
+		@apply pb-12;
+		@apply text-lg;
+	}
+
+	.left > a {
+		@apply mr-4;
+	}
 }
 </style>

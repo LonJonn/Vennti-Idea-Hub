@@ -61,7 +61,7 @@ h2 {
 }
 
 .card:hover {
-	@apply shadow-lifted bg-gray-100;
+	@apply shadow-lifted bg-gray-200;
 	transform: scale(1.0125);
 }
 
