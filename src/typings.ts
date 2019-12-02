@@ -3,7 +3,7 @@ import { firestore as fs } from "firebase/app";
 ///////////////// * Types * /////////////////
 export type Skill = "Technical" | "Business" | "Project Manager" | "DMP" | "CDP";
 
-export type Status = "Open" | "Active" | "Solved" | "Blocked";
+export type Status = "Open" | "Active" | "Finished" | "Blocked";
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 

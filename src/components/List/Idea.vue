@@ -1,30 +1,36 @@
 <template>
-	<router-link tag="div" :to="'ideas/' + idea.id" class="card flex flex-col">
-		<h2>{{ idea.benefit }}</h2>
-		<div
-			id="content"
-			class="text-gray-700 text-sm h-12 overflow-hidden flex-grow"
-			style="text-overflow: ellipsis"
-		>{{ idea.description }}</div>
-		<div id="footer" class="text-gray-600 font-light flex">
-			<span class="flex-grow">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
-			<router-link :to="'/users/' + idea.owner.id" class="user">
-				<img :src="idea.owner.photoUrl" class="rounded-full w-6 mr-2" />
-				{{ initials }}
-			</router-link>
-		</div>
-	</router-link>
+	<div class="main">
+		<router-link tag="div" :to="'ideas/' + idea.id" class="card">
+			<h2>{{ idea.benefit }}</h2>
+			<div class="content">
+				<div
+					class="rounded bg-yellow-400 text-yellow-800 px-2 py-1 text-xs mb-2 inline-block"
+				>{{ idea.status }}</div>
+				<div class="text-blue-600">{{ idea.assignedCount }} assigned</div>
+			</div>
+			<div class="footer">
+				<span class="date">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
+				<router-link :to="'/users/' + idea.owner.id" class="user">
+					<img :src="idea.owner.photoUrl" align="middle" />
+					{{ initials }}
+				</router-link>
+			</div>
+		</router-link>
+		<div class="likes" :class="'status-' + idea.status.toLowerCase()">{{ idea.status }}</div>
+	</div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import * as AppTypes from "@/typings";
+import { db, auth } from "../../firebase";
 
 @Component
 export default class IdeaComponent extends Vue {
 	// Props
 	@Prop() idea: AppTypes.Idea;
 
+	// Computed
 	get initials() {
 		const [first, second] = this.idea.owner.displayName.split(" ");
 		if (!second) return first;
@@ -35,6 +41,31 @@ export default class IdeaComponent extends Vue {
 </script>
 
 <style lang="postcss" scoped>
+.main {
+	@apply relative;
+
+	transition-duration: 0.2s;
+	transition-property: transform;
+	transition-timing-function: ease-in-out;
+}
+
+.main:hover {
+	transform: scale(1.0125);
+}
+
+.card {
+	@apply flex flex-col;
+	@apply rounded-xl bg-white shadow-xl py-3 px-5 cursor-pointer;
+
+	transition-duration: 0.2s;
+	transition-property: background, box-shadow, transform;
+	transition-timing-function: ease-in-out;
+}
+
+.card:hover {
+	@apply shadow-lifted bg-gray-200;
+}
+
 h2 {
 	@apply cursor-pointer font-bold text-2xl my-2 leading-tight;
 
@@ -50,26 +81,69 @@ h2 {
 	-webkit-background-clip: text;
 }
 
-.card {
-	@apply rounded-xl bg-white shadow-xl py-3 px-5 cursor-pointer;
-
-	min-height: 20rem;
-
-	transition-duration: 0.2s;
-	transition-property: box-shadow, transform, background;
-	transition-timing-function: ease-in-out;
+.card:hover h2 span {
+	-webkit-text-fill-color: initial;
+	-webkit-background-clip: unset;
 }
 
-.card:hover {
-	@apply shadow-lifted bg-gray-200;
-	transform: scale(1.0125);
+.content {
+	@apply text-gray-700 font-light;
 }
 
-.user {
-	@apply flex items-center text-lg cursor-pointer;
+.footer {
+	@apply flex items-center;
+	@apply text-gray-600;
 }
 
-.user:hover {
+.footer .date {
+	@apply flex-grow;
+}
+
+.footer .user {
+	@apply flex items-center;
+}
+
+.footer .user img {
+	@apply inline w-8 mr-2;
+	@apply rounded-full;
+}
+
+.footer .user:hover {
 	@apply text-blue-500 underline;
+}
+
+.likes {
+	@apply absolute px-3 py-1;
+	@apply font-semibold text-lg;
+	@apply rounded-full shadow-full cursor-pointer;
+
+	top: -0.625rem;
+	right: -0.625rem;
+}
+
+.likes.status-open {
+	@apply bg-teal-400 text-teal-800;
+}
+
+.likes.status-active {
+	@apply bg-blue-500 text-blue-100;
+}
+
+.likes.status-done {
+	@apply bg-green-400 text-green-800;
+}
+
+.likes.status-blocked {
+	@apply bg-red-400 text-red-800;
+}
+
+@screen sm {
+	.card {
+		min-height: 20rem;
+	}
+
+	.content {
+		@apply flex-grow;
+	}
 }
 </style>
