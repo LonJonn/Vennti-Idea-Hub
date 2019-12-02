@@ -1,12 +1,18 @@
 <template>
 	<div class="main">
 		<router-link tag="div" :to="'ideas/' + idea.id" class="card">
-			<h2>{{ idea.benefit }}</h2>
+			<h2 class="capitalize">{{ idea.benefit }}</h2>
 			<div class="content">
-				<div
-					class="rounded bg-yellow-400 text-yellow-800 px-2 py-1 text-xs mb-2 inline-block"
-				>{{ idea.status }}</div>
-				<div class="text-blue-600">{{ idea.assignedCount }} assigned</div>
+				<div v-for="skill in idea.skillsRequired" :key="skill" class="tag">{{ skill }}</div>
+				<div class="text-gray-600 font-medium">
+					<span>{{ idea.assignedCount }} contributors</span>
+					<span class="stats float-right">
+						{{ idea.likesCount }}
+						<i class="fas fa-thumbs-up"></i>
+						{{ idea.commentCount }}
+						<i class="fas fa-comments"></i>
+					</span>
+				</div>
 			</div>
 			<div class="footer">
 				<span class="date">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
@@ -16,7 +22,7 @@
 				</router-link>
 			</div>
 		</router-link>
-		<div class="likes" :class="'status-' + idea.status.toLowerCase()">{{ idea.status }}</div>
+		<div class="status" :class="idea.status.toLowerCase()">{{ idea.status }}</div>
 	</div>
 </template>
 
@@ -63,7 +69,7 @@ export default class IdeaComponent extends Vue {
 }
 
 .card:hover {
-	@apply shadow-lifted bg-gray-200;
+	@apply shadow-lifted bg-gray-100;
 }
 
 h2 {
@@ -87,7 +93,17 @@ h2 {
 }
 
 .content {
-	@apply text-gray-700 font-light;
+	@apply text-gray-700;
+}
+
+.content .tag {
+	@apply inline-block mb-2 mr-2 px-2 py-1;
+	@apply bg-indigo-500 text-white;
+	@apply text-xs font-semibold rounded;
+}
+
+.content .tag:before {
+	content: "• ";
 }
 
 .footer {
@@ -112,7 +128,7 @@ h2 {
 	@apply text-blue-500 underline;
 }
 
-.likes {
+.status {
 	@apply absolute px-3 py-1;
 	@apply font-semibold text-lg;
 	@apply rounded-full shadow-full cursor-pointer;
@@ -121,20 +137,20 @@ h2 {
 	right: -0.625rem;
 }
 
-.likes.status-open {
+.status.open {
 	@apply bg-teal-400 text-teal-800;
 }
 
-.likes.status-active {
-	@apply bg-blue-500 text-blue-100;
+.status.active {
+	@apply bg-blue-500 text-white;
 }
 
-.likes.status-done {
-	@apply bg-green-400 text-green-800;
+.status.done {
+	@apply bg-green-500 text-white;
 }
 
-.likes.status-blocked {
-	@apply bg-red-400 text-red-800;
+.status.blocked {
+	@apply bg-red-500 text-white;
 }
 
 @screen sm {

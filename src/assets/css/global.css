@@ -6,7 +6,7 @@ button:focus {
 }
 
 h1 {
-    @apply text-3xl font-bold mb-4 inline-block relative;
+	@apply text-3xl font-bold mb-4 inline-block relative;
 }
 
 h1::after {
@@ -45,3 +45,38 @@ h1:hover::after {
 .input:focus {
 	@apply bg-white border-primary-500;
 }
+
+/* [aria-label] {
+	position: relative;
+}
+
+[aria-label]:after {
+	content: attr(aria-label);
+	display: none;
+	position: absolute;
+	bottom: 120%;
+	left: 0px;
+	z-index: 5000;
+	pointer-events: none;
+	padding: 8px 10px;
+	line-height: 15px;
+	white-space: nowrap;
+	text-decoration: none;
+	text-indent: 0;
+	overflow: visible;
+	font-size: 0.9em;
+	font-weight: normal;
+	color: #fff;
+	text-shadow: 1px 0 1px #888;
+	background-color: #412917;
+	border-left: 6px solid #d37092;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+[aria-label]:hover:after,
+[aria-label]:focus:after {
+	display: block;
+} */
