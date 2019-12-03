@@ -3,7 +3,7 @@ import { firestore as fs } from "firebase/app";
 ///////////////// * Types * /////////////////
 export type Skill = "Technical" | "Business" | "Project Manager" | "DMP" | "CDP";
 
-export type Status = "Open" | "Active" | "Finished" | "Blocked";
+export type Status = "Open" | "Active" | "Done" | "Blocked";
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -32,6 +32,7 @@ export interface Idea extends IdeaNew {
 	assignedCount: number;
 	likesCount: number;
 	commentCount: number;
+	tracking: number;
 }
 
 export interface IdeaNew {
@@ -40,6 +41,7 @@ export interface IdeaNew {
 	difficulty: Difficulty;
 	skillsRequired: Skill[];
 	timeEstimation: [number, number];
+	projectCode?: string;
 }
 
 export interface IdeaUpdate {
@@ -49,6 +51,7 @@ export interface IdeaUpdate {
 	difficulty?: Difficulty;
 	skillsRequired?: fs.FieldValue;
 	timeEstimation?: [number, number];
+	tracking?: number;
 }
 
 ///////////////// * Likes * /////////////////

@@ -4,6 +4,7 @@
 			<h2 class="capitalize">{{ idea.benefit }}</h2>
 			<div class="content">
 				<div v-for="skill in idea.skillsRequired" :key="skill" class="tag">{{ skill }}</div>
+				<hr class="my-2 -mx-5 border-b" />
 				<div class="text-gray-600 font-medium">
 					<span>{{ idea.assignedCount }} contributors</span>
 					<span class="stats float-right">
@@ -107,7 +108,7 @@ h2 {
 }
 
 .footer {
-	@apply flex items-center;
+	@apply flex items-center mt-3;
 	@apply text-gray-600;
 }
 

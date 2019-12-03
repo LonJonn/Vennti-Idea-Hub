@@ -20,11 +20,7 @@
 				/>
 
 				<label class="label">Difficulty</label>
-				<select v-model="ideaForm.difficulty" class="input">
-					<option value="Easy">Easy</option>
-					<option value="Medium">Medium</option>
-					<option value="Hard">Hard</option>
-				</select>
+				<multiselect class="mb-8" v-model="ideaForm.difficulty" :options="['Easy', 'Medium', 'Hard']" />
 
 				<div class="hours">
 					<div>
@@ -36,13 +32,27 @@
 						<input v-model.number="ideaForm.timeEstimation[1]" type="number" class="input" />
 					</div>
 				</div>
+
+				<hr class="mb-8 border-b" />
+
+				<label class="label">Skills required</label>
+				<multiselect
+					class="mb-8"
+					v-model="ideaForm.skillsRequired"
+					:options="skillsOptions"
+					:multiple="true"
+					placeholder="Type to search"
+				>
+					<span slot="noResult">Oops! No skills found. Consider changing the search query.</span>
+				</multiselect>
+
 				<AppButton @click.native="add()">Add</AppButton>
 			</form>
 			<div class="helper">
 				<h2 class="mb-4">Make sure your idea is</h2>
 				<ul>
 					<li class="flex items-center">
-						<div class="rounded-full fill-current text-green-600">
+						<div class="rounded-full fill-current text-green-500">
 							<svg
 								class="w-8 h-8"
 								viewBox="0 0 24 24"
@@ -62,7 +72,7 @@
 						class="ml-12 text-gray-600 text-sm -mt-1 mb-8"
 					>Make sure you thoroughly outline why your idea is great and why others would want to contribute!</li>
 					<li class="flex items-center">
-						<div class="rounded-full fill-current text-green-600">
+						<div class="rounded-full fill-current text-green-500">
 							<svg
 								class="w-8 h-8"
 								viewBox="0 0 24 24"
@@ -82,7 +92,7 @@
 						class="ml-12 text-gray-600 text-sm -mt-1 mb-8"
 					>Check to see if someone has already put a similar idea up</li>
 					<li class="flex items-center">
-						<div class="rounded-full fill-current text-green-600">
+						<div class="rounded-full fill-current text-green-500">
 							<svg
 								class="w-8 h-8"
 								viewBox="0 0 24 24"
@@ -115,7 +125,9 @@ import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
 
-@Component
+import Multiselect from "vue-multiselect";
+
+@Component({ components: { Multiselect } })
 export default class Create extends Vue {
 	// State
 	ideaForm: AppTypes.IdeaNew = {
@@ -125,6 +137,8 @@ export default class Create extends Vue {
 		skillsRequired: [],
 		timeEstimation: [null, null]
 	};
+
+	skillsOptions = ["Technical", "Business", "Project Manager", "DMP", "CDP"];
 
 	// Methods
 	add() {
@@ -146,7 +160,8 @@ export default class Create extends Vue {
 			createdAt: firestore.Timestamp.now(),
 			likesCount: 0,
 			assignedCount: 0,
-			commentCount: 0
+			commentCount: 0,
+			tracking: 0
 		};
 
 		db.collection("ideas").add(newIdea);
@@ -155,6 +170,8 @@ export default class Create extends Vue {
 	}
 }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="postcss" scoped>
 button {
@@ -190,20 +207,20 @@ select.input {
 }
 
 .helper > h2 {
-	@apply font-extrabold text-2xl;
+	@apply font-bold text-2xl;
 }
 
 .helper::before {
 	content: "";
-	@apply absolute block h-24 w-24 rounded-full bg-gray-500 opacity-75;
-	bottom: -1em;
+	@apply absolute block h-24 w-24 rounded-full bg-gray-400 opacity-75;
+	bottom: -1.75em;
 	left: 3em;
 }
 
 .helper::after {
 	content: "";
-	@apply absolute block h-8 w-4/5 bg-gray-500 opacity-75;
-	bottom: 1em;
+	@apply absolute block h-8 w-4/5 bg-gray-400 opacity-75;
+	bottom: 2em;
 	left: -5em;
 	transform: rotate(30deg);
 }
@@ -212,5 +229,52 @@ select.input {
 	.helper {
 		@apply block;
 	}
+}
+</style>
+
+<style lang="postcss">
+.multiselect__single {
+	@apply bg-gray-200;
+}
+
+.multiselect__tags {
+	@apply bg-gray-200 text-gray-700 border-gray-200;
+	@apply rounded border leading-tight outline-none text-base font-light tracking-wide;
+
+	transition-duration: 0.2s;
+	transition-property: background-color, color, border;
+	transition-timing-function: ease-in-out;
+}
+
+.multiselect__option.multiselect__option--highlight.multiselect__option--selected,
+.multiselect__option.multiselect__option--highlight.multiselect__option--selected::after {
+	@apply bg-red-500;
+}
+
+.multiselect__placeholder {
+	@apply ml-1 text-gray-500 font-light;
+}
+
+.multiselect__tags:focus-within {
+	@apply bg-white border-primary-500;
+}
+
+.multiselect__tag,
+.multiselect__option.multiselect__option--highlight,
+.multiselect__option.multiselect__option--highlight::after {
+	@apply bg-primary-400;
+}
+
+.multiselect__tag-icon {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.multiselect__tag-icon:hover {
+	@apply bg-primary-500;
+}
+
+.multiselect__tag-icon::after {
+	@apply text-primary-600;
 }
 </style>
