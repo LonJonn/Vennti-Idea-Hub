@@ -62,7 +62,9 @@ export default class IdeaComponent extends Vue {
 
 .card {
 	@apply flex flex-col;
-	@apply rounded-xl bg-white shadow-xl py-3 px-5 cursor-pointer;
+	@apply bg-white shadow-xl py-3 px-5 cursor-pointer;
+
+	border-radius: 20px;
 
 	transition-duration: 0.2s;
 	transition-property: background, box-shadow, transform;
