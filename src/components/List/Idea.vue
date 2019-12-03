@@ -3,8 +3,6 @@
 		<router-link tag="div" :to="'ideas/' + idea.id" class="card">
 			<h2 class="capitalize">{{ idea.benefit }}</h2>
 			<div class="content">
-				<div v-for="skill in idea.skillsRequired" :key="skill" class="tag">{{ skill }}</div>
-				<hr class="my-2 -mx-5 border-b" />
 				<div class="text-gray-600 font-medium">
 					<span>{{ idea.assignedCount }} contributors</span>
 					<span class="stats float-right">
@@ -14,6 +12,8 @@
 						<i class="fas fa-comments"></i>
 					</span>
 				</div>
+				<hr class="my-2 -mx-2 border-b" />
+				<div v-for="(skill, idx) in idea.skillsRequired" :key="idx" class="tag">{{ skill }}</div>
 			</div>
 			<div class="footer">
 				<span class="date">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
@@ -103,12 +103,16 @@ h2 {
 	@apply text-xs font-semibold rounded;
 }
 
+.content .tag:hover {
+	@apply bg-indigo-700;
+}
+
 .content .tag:before {
 	content: "• ";
 }
 
 .footer {
-	@apply flex items-center mt-3;
+	@apply flex items-center;
 	@apply text-gray-600;
 }
 
