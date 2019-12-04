@@ -1,6 +1,6 @@
 <template>
 	<div class="helper">
-		<h2 class="mb-4">Make sure your idea is</h2>
+		<h2>Make sure your idea is</h2>
 		<ul class="list">
 			<li>
 				<i class="check-icon far fa-check-circle"></i>
@@ -32,44 +32,55 @@ export default class HelperComponent extends Vue {}
 
 <style lang="postcss" scoped>
 .helper {
-	@apply bg-gray-100 rounded-xl shadow-xl p-12 w-2/5 hidden overflow-hidden relative;
+	@apply relative hidden w-2/5 p-12;
+	@apply bg-gray-100;
+	@apply rounded-xl shadow-xl overflow-hidden;
 }
 
 .helper > h2 {
-	@apply font-bold text-2xl;
+	@apply mb-4;
+	@apply text-2xl font-bold;
 }
 
 .helper::before {
 	content: "";
-	@apply absolute block h-24 w-24 rounded-full bg-gray-400 opacity-75;
+	@apply absolute block h-24 w-24;
+	@apply bg-gray-400;
+	@apply rounded-full opacity-75;
+
 	bottom: -1.75em;
 	left: 3em;
 }
 
 .helper::after {
 	content: "";
-	@apply absolute block h-8 w-4/5 bg-gray-400 opacity-75;
+	@apply absolute block h-8 w-4/5;
+	@apply bg-gray-400;
+	@apply opacity-75;
+
 	bottom: 2em;
 	left: -5em;
 	transform: rotate(30deg);
 }
 
 .list {
-	@apply ml-12 mb-8 relative;
+	@apply relative ml-12 mb-8;
 }
 
 .list .check-icon {
-	@apply absolute w-8 text-4xl text-green-500;
+	@apply absolute w-8;
+	@apply text-4xl text-green-500;
 
 	transform: translateX(-135%);
 }
 
 .list .title {
-	@apply text-gray-700 font-light text-2xl;
+	@apply text-2xl text-gray-700 font-light;
 }
 
 .list .sub {
-	@apply mb-4 text-gray-600 text-sm;
+	@apply mb-4;
+	@apply text-sm text-gray-600;
 }
 
 @screen lg {
