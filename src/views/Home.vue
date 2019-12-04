@@ -33,6 +33,14 @@ export default class Home extends Vue {
 	user = { ...auth.currentUser };
 	currentName = this.user ? this.user.displayName : null; // Should be logged in, but for now check
 
+	mounted() {
+		document.body.classList.add("home-background");
+	}
+
+	destroyed() {
+		document.body.classList.remove("home-background");
+	}
+
 	async updateProfile() {
 		const { currentUser } = auth;
 
@@ -52,3 +60,24 @@ export default class Home extends Vue {
 	}
 }
 </script>
+
+<style lang="postcss">
+.home-background {
+	background: #eef0f7;
+}
+
+.home-background::after {
+	content: "";
+
+	@apply absolute block;
+	@apply bg-white;
+
+	right: -10%;
+	left: -10%;
+	top: -10%;
+	height: 920px;
+
+	z-index: -1;
+	transform: skewY(-3deg);
+}
+</style>

@@ -65,7 +65,7 @@ export default class List extends Vue {
 	grid-template-columns: 1fr;
 	grid-gap: 2em;
 
-	@apply mb-16;
+	@apply mb-8;
 }
 
 @screen sm {
