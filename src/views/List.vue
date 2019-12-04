@@ -2,8 +2,8 @@
 	<div>
 		<h1>Ideas</h1>
 		<div class="search-bar">
-			<input class="input" type="text" name="search" />
-			<button>Search</button>
+			<input type="text" name="search" placeholder="Type to search" />
+			<AppButton theme="light">Search</AppButton>
 		</div>
 		<div class="ideas-container">
 			<AppIdea v-for="idea of ideas" :key="idea.id" :idea="idea" />
@@ -35,19 +35,36 @@ export default class List extends Vue {
 
 <style lang="postcss" scoped>
 .search-bar {
-	@apply flex mb-10;
-	@apply rounded-md;
+	display: grid;
+	grid-template-columns: 3fr 1fr;
+	grid-gap: 2em;
+
+	@apply mb-12;
 }
 
-.search-bar button {
-	@apply px-8 py-2;
-	@apply bg-gray-400;
+.search-bar * {
+	@apply py-3 px-6;
+}
+
+.search-bar input {
+	@apply bg-gray-300;
+	@apply rounded-xl border;
+
+	transition-duration: 0.2s;
+	transition-property: background-color, border;
+	transition-timing-function: ease-in-out;
+}
+
+.search-bar input:focus {
+	@apply bg-white;
+	@apply border-primary-500;
 }
 
 .ideas-container {
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-gap: 2em;
+
 	@apply mb-16;
 }
 

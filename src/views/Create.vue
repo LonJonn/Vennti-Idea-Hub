@@ -4,7 +4,12 @@
 		<div class="flex items-start mb-16">
 			<form @submit.prevent class="lg:mr-12 flex-grow">
 				<label class="label">Title</label>
-				<input v-model="ideaForm.title" class="input" type="text" />
+				<input
+					v-model="ideaForm.title"
+					class="input"
+					type="text"
+					placeholder="A very breif description of your idea"
+				/>
 
 				<label class="label">Value</label>
 				<input
