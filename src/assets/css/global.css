@@ -13,23 +13,6 @@ h1 {
 	@apply text-3xl font-bold mb-4 inline-block relative;
 }
 
-h1::after {
-	@apply block absolute w-0 h-4 bg-primary-400 opacity-75;
-
-	content: "";
-	bottom: 0.5rem;
-	left: 0.5rem;
-	z-index: -1;
-
-	transition-duration: 0.2s;
-	transition-property: width;
-	transition-timing-function: ease-in-out;
-}
-
-h1:hover::after {
-	@apply w-full;
-}
-
 .label {
 	@apply block mb-1;
 	@apply text-gray-700;
