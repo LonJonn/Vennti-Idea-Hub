@@ -5,7 +5,7 @@ export type Skill = "Technical" | "Business" | "Project Manager" | "DMP" | "CDP"
 
 export type Status = "Open" | "Active" | "Done" | "Blocked";
 
-export type Difficulty = "Easy" | "Medium" | "Hard";
+export type Scale = "Small" | "Medium" | "Large";
 
 ///////////////// * Users * /////////////////
 export interface User {
@@ -36,19 +36,21 @@ export interface Idea extends IdeaNew {
 }
 
 export interface IdeaNew {
-	benefit: string;
+	title: string;
+	value: string;
 	description: string;
-	difficulty: Difficulty;
+	scale: Scale;
 	skillsRequired: Skill[];
 	timeEstimation: [number, number];
 	projectCode?: string;
 }
 
 export interface IdeaUpdate {
-	benefit?: string;
+	title?: string;
+	value?: string;
 	description?: string;
 	status?: Status;
-	difficulty?: Difficulty;
+	scale?: Scale;
 	skillsRequired?: fs.FieldValue;
 	timeEstimation?: [number, number];
 	tracking?: number;

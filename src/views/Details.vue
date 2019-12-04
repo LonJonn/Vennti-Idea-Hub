@@ -11,10 +11,10 @@
 			<br />
 			<div class="mb-5 list text-blue-800">
 				<li>description: {{ idea.description }}</li>
-				<li>benefit: {{ idea.benefit }}</li>
+				<li>value: {{ idea.value }}</li>
 				<li>skills required: {{ idea.skillsRequired.join(", ") || "None" }}</li>
 				<li>opened: {{ idea.createdAt.toDate() }}</li>
-				<li>difficulty: {{ idea.difficulty }}</li>
+				<li>scale: {{ idea.scale }}</li>
 				<li>status: {{ idea.status }}</li>
 				<li>Owner: {{ idea.owner.displayName }}</li>
 				<button v-if="!userIsAssigned" @click="assignUser()" class="text-orange-600 my-3">Work on this</button>

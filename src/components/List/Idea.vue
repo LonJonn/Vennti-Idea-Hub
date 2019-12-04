@@ -1,30 +1,30 @@
 <template>
-	<div class="main">
-		<router-link tag="div" :to="'ideas/' + idea.id" class="card">
-			<h2 class="capitalize">{{ idea.benefit }}</h2>
-			<div class="content">
-				<div class="text-gray-600 font-medium">
-					<span>{{ idea.assignedCount }} contributors</span>
-					<span class="stats float-right">
-						{{ idea.likesCount }}
-						<i class="fas fa-thumbs-up"></i>
-						{{ idea.commentCount }}
-						<i class="fas fa-comments"></i>
-					</span>
-				</div>
-				<hr class="my-2 -mx-2 border-b" />
-				<div v-for="(skill, idx) in idea.skillsRequired" :key="idx" class="tag">{{ skill }}</div>
+	<router-link tag="div" :to="'ideas/' + idea.id" class="card">
+		<h2 class="capitalize">{{ idea.title }}</h2>
+		<div class="content">
+			<div class="text-gray-600 font-medium">
+				<span>{{ idea.assignedCount }} contributors</span>
+				<span class="stats float-right">
+					{{ idea.likesCount }}
+					<i class="fas fa-thumbs-up"></i>
+					{{ idea.commentCount }}
+					<i class="fas fa-comments"></i>
+				</span>
 			</div>
-			<div class="footer">
-				<span class="date">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
-				<router-link :to="'/users/' + idea.owner.id" class="user">
-					<img :src="idea.owner.photoUrl" align="middle" />
-					{{ initials }}
-				</router-link>
-			</div>
-		</router-link>
+
+			<hr class="my-2 -mx-2 border-b" />
+
+			<div v-for="(skill, idx) in idea.skillsRequired" :key="idx" class="tag">{{ skill }}</div>
+		</div>
+		<div class="footer">
+			<span class="date">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
+			<router-link :to="'/users/' + idea.owner.id" class="user">
+				<img :src="idea.owner.photoUrl" align="middle" />
+				{{ initials }}
+			</router-link>
+		</div>
 		<div class="status" :class="idea.status.toLowerCase()">{{ idea.status }}</div>
-	</div>
+	</router-link>
 </template>
 
 <script lang="ts">
@@ -48,20 +48,8 @@ export default class IdeaComponent extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-.main {
-	@apply relative;
-
-	transition-duration: 0.2s;
-	transition-property: transform;
-	transition-timing-function: ease-in-out;
-}
-
-.main:hover {
-	transform: scale(1.0125);
-}
-
 .card {
-	@apply flex flex-col;
+	@apply flex flex-col relative;
 	@apply bg-white shadow-xl py-3 px-5 cursor-pointer;
 
 	border-radius: 20px;
@@ -73,10 +61,12 @@ export default class IdeaComponent extends Vue {
 
 .card:hover {
 	@apply shadow-lifted bg-gray-100;
+
+	transform: scale(1.0125);
 }
 
 h2 {
-	@apply cursor-pointer font-bold text-2xl my-2 leading-tight;
+	@apply cursor-pointer font-bold text-xl my-2 leading-tight;
 
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -140,8 +130,8 @@ h2 {
 	@apply font-semibold text-lg;
 	@apply rounded-full shadow-full cursor-pointer;
 
-	top: -0.625rem;
-	right: -0.625rem;
+	top: -0.75rem;
+	right: -0.75rem;
 }
 
 .status.open {

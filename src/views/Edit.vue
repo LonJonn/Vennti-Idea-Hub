@@ -3,10 +3,10 @@
 		<div v-if="loading">Loading...</div>
 		<div v-else-if="idea" class="mb-5 list text-blue-800 p-5">
 			<li>description: {{ idea.description }}</li>
-			<li>benefit: {{ idea.benefit }}</li>
+			<li>value: {{ idea.value }}</li>
 			<li>skills required: {{ idea.skillsRequired || "None" }}</li>
 			<li>opened: {{ idea.createdAt.toDate() }}</li>
-			<li>difficulty: {{ idea.difficulty }}</li>
+			<li>scale: {{ idea.scale }}</li>
 			<li>status: {{ idea.status }}</li>
 			<br />
 			<button v-show="isOwner" class="button bg-red-500" @click="remove()">Delete</button>
