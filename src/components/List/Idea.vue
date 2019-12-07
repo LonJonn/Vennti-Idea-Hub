@@ -5,7 +5,7 @@
 			<div class="text-gray-600 font-medium">
 				<span>{{ idea.assignedCount }} contributors</span>
 				<span class="stats float-right">
-					{{ idea.likesCount }}
+					{{ idea.likeCount }}
 					<i class="fas fa-thumbs-up"></i>
 					{{ idea.commentCount }}
 					<i class="fas fa-comments"></i>

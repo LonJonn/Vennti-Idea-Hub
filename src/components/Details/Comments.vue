@@ -31,6 +31,9 @@ import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
 
+const increment = firestore.FieldValue.increment(1);
+const decrement = firestore.FieldValue.increment(-1);
+
 @Component
 export default class CommentsComponent extends Vue {
 	// Props
@@ -47,14 +50,14 @@ export default class CommentsComponent extends Vue {
 	// Hooks
 	async mounted() {
 		await this.$bind("comments", this.ref.orderBy("createdAt"));
-		// this.$emit("loaded");
 	}
 
 	// Methods
 	async addComment() {
 		if (!this.content) return alert("Can't have empty comment!");
 
-		const newLike: AppTypes.Comment = {
+		const commentRef = this.ref.doc();
+		const newComment: AppTypes.Comment = {
 			createdAt: firestore.Timestamp.now(),
 			owner: {
 				id: auth.currentUser.uid,
@@ -66,11 +69,19 @@ export default class CommentsComponent extends Vue {
 
 		this.content = "";
 
-		await this.ref.add(newLike);
+		await db
+			.batch()
+			.set(commentRef, newComment)
+			.update(this.ref.parent, { commentCount: increment })
+			.commit();
 	}
 
 	async deleteComment(commentId: string) {
-		await this.ref.doc(commentId).delete();
+		await db
+			.batch()
+			.delete(this.ref.doc(commentId))
+			.update(this.ref.parent, { commentCount: decrement })
+			.commit();
 	}
 
 	isOwner(id: string) {

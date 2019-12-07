@@ -102,7 +102,7 @@ export default class Create extends Vue {
 			},
 			status: "Open",
 			createdAt: firestore.Timestamp.now(),
-			likesCount: 0,
+			likeCount: 0,
 			assignedCount: 0,
 			commentCount: 0,
 			tracking: 0

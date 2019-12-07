@@ -30,7 +30,7 @@ export interface Idea extends IdeaNew {
 	status: Status;
 	createdAt: fs.Timestamp;
 	assignedCount: number;
-	likesCount: number;
+	likeCount: number;
 	commentCount: number;
 	tracking: number;
 }

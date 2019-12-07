@@ -1,7 +1,8 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import { FieldValue } from "@google-cloud/firestore";
 admin.initializeApp(functions.config().firebase);
+
+console.log(functions.config().firebase);
 
 // import * as algoliasearch from "algoliasearch";
 // const { algolia } = functions.config();
@@ -66,79 +67,4 @@ export const ideaDeleteSync = functions.firestore
 
 		// Commit batch
 		batch.commit();
-	});
-
-/**
- * **<==Sync count on Idea like==>**
- */
-export const onLike = functions.firestore
-	.document("ideas/{ideaId}/likes/{likeId}")
-	.onWrite((change, context) => {
-		// Add Like
-		if (!change.before.exists) {
-			db.collection("ideas")
-				.doc(context.params["ideaId"])
-				.update({ likesCount: FieldValue.increment(1) })
-				.catch(() => console.log("Idea already deleted."));
-		}
-
-		// Remove Like
-		if (!change.after.exists) {
-			db.collection("ideas")
-				.doc(context.params["ideaId"])
-				.update({ likesCount: FieldValue.increment(-1) })
-				.catch(() => console.log("Idea already deleted."));
-		}
-
-		return 0;
-	});
-
-/**
- * **<==Sync count on Idea assignment==>**
- */
-export const onAssignment = functions.firestore
-	.document("ideas/{ideaId}/assigned/{assignmentId}")
-	.onWrite((change, context) => {
-		// Assignment
-		if (!change.before.exists) {
-			db.collection("ideas")
-				.doc(context.params["ideaId"])
-				.update({ assignedCount: FieldValue.increment(1) })
-				.catch(() => console.log("Idea already deleted."));
-		}
-
-		// Unassign
-		if (!change.after.exists) {
-			db.collection("ideas")
-				.doc(context.params["ideaId"])
-				.update({ assignedCount: FieldValue.increment(-1) })
-				.catch(() => console.log("Idea already deleted."));
-		}
-
-		return 0;
-	});
-
-/**
- * **<==Sync count on Idea comment==>**
- */
-export const onComment = functions.firestore
-	.document("ideas/{ideaId}/comments/{assignmentId}")
-	.onWrite((change, context) => {
-		// New Comment
-		if (!change.before.exists) {
-			db.collection("ideas")
-				.doc(context.params["ideaId"])
-				.update({ commentCount: FieldValue.increment(1) })
-				.catch(() => console.log("Idea already deleted."));
-		}
-
-		// Delete Comment
-		if (!change.after.exists) {
-			db.collection("ideas")
-				.doc(context.params["ideaId"])
-				.update({ commentCount: FieldValue.increment(-1) })
-				.catch(() => console.log("Idea already deleted."));
-		}
-
-		return 0;
 	});

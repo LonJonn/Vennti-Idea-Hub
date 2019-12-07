@@ -13,6 +13,9 @@ import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
 
+const increment = firestore.FieldValue.increment(1);
+const decrement = firestore.FieldValue.increment(-1);
+
 @Component
 export default class LikesComponent extends Vue {
 	// Props
@@ -28,7 +31,6 @@ export default class LikesComponent extends Vue {
 	// Hooks
 	async mounted() {
 		await this.$bind("likes", this.ref.orderBy("createdAt"));
-		this.$emit("loaded");
 	}
 
 	// Methods
@@ -44,12 +46,21 @@ export default class LikesComponent extends Vue {
 			}
 		};
 
-		await likeRef.set(newLike);
+		await db
+			.batch()
+			.set(likeRef, newLike)
+			.update(this.ref.parent, { likeCount: increment })
+			.commit();
 	}
 
 	async removeLike() {
 		const likeRef = this.ref.doc(auth.currentUser.uid);
-		await likeRef.delete();
+
+		await db
+			.batch()
+			.delete(likeRef)
+			.update(this.ref.parent, { likeCount: decrement })
+			.commit();
 	}
 
 	// Computed

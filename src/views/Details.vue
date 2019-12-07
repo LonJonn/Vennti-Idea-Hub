@@ -36,6 +36,9 @@ import { db, auth } from "@/firebase";
 import { firestore } from "firebase/app";
 import * as AppTypes from "@/typings";
 
+const increment = firestore.FieldValue.increment(1);
+const decrement = firestore.FieldValue.increment(-1);
+
 @Component({ components: { AppLikes, AppComments } })
 export default class Details extends Vue {
 	// State
@@ -72,12 +75,21 @@ export default class Details extends Vue {
 			createdAt: firestore.Timestamp.now()
 		};
 
-		await assignmentRef.set(newAssignment);
+		await db
+			.batch()
+			.set(assignmentRef, newAssignment)
+			.update(this.ref, { assignedCount: increment })
+			.commit();
 	}
 
 	async unassignUser() {
 		const assignmentRef = this.ref.collection("assigned").doc(auth.currentUser.uid);
-		await assignmentRef.delete();
+
+		await db
+			.batch()
+			.delete(assignmentRef)
+			.update(this.ref, { assignedCount: decrement })
+			.commit();
 	}
 
 	// Computed
