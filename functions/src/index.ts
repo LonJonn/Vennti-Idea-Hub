@@ -3,78 +3,43 @@ import * as admin from "firebase-admin";
 import { FieldValue } from "@google-cloud/firestore";
 admin.initializeApp(functions.config().firebase);
 
+// import * as algoliasearch from "algoliasearch";
+// const { algolia } = functions.config();
+
+// const client = algoliasearch(algolia.app, algolia.key);
+// const ideas = client.initIndex("ideas");
+
 // Global firestore instance
 const db = admin.firestore();
 
-// NEED TO UPDATE!!!
-// /**
-//  * **<==Sync database on user delete==>**
-//  */
-// export const userDeleteSync = functions.firestore
-// 	.document("users/{userId}")
-// 	.onDelete(async deletedUser => {
-// 		console.info("User batch delete started.");
+/**
+ * Algolia Indexing
+ */
+// export const addToIndex = functions.firestore.document("ideas/{ideaId}").onCreate(snapshot => {
+// 	const data = snapshot.data();
+// 	const objectId = snapshot.id;
 
-// 		// Creating batch
-// 		const batch = db.batch();
-
-// 		/**
-// 		 * *<==Batch #1==>*
-// 		 * **Removing User Likes**
-// 		 */
-// 		// Get all User likes in all subcollections
-// 		const likes = await db
-// 			.collectionGroup("likes")
-// 			.where("ref", "==", deletedUser.ref)
-// 			.get();
-
-// 		// Delete each like document in subcollection & update parent `likes` Array
-// 		likes.forEach(likeDoc => {
-// 			batch.delete(likeDoc.ref);
-// 			batch.update(likeDoc.ref.parent.parent!, {
-// 				likes: admin.firestore.FieldValue.arrayRemove(deletedUser.id)
-// 			});
-// 		});
-
-// 		/**
-// 		 * *<==Batch #2==>*
-// 		 * **Removing User Assignments**
-// 		 */
-// 		// Get all User assignments in all subcollections
-// 		const assignments = await db
-// 			.collectionGroup("assignments")
-// 			.where("ref", "==", deletedUser.ref)
-// 			.get();
-
-// 		// Delete each assignment in subcollection & update parent `assignments` Array
-// 		assignments.forEach(assignmentDoc => {
-// 			batch.delete(assignmentDoc.ref);
-// 			batch.update(assignmentDoc.ref.parent.parent!, {
-// 				assignments: admin.firestore.FieldValue.arrayRemove(deletedUser.id)
-// 			});
-// 		});
-
-// 		/**
-// 		 * *<==Batch #3==>*
-// 		 * **Removing User Idea**
-// 		 */
-// 		// Get all User Ideas
-// 		const ideas = await db
-// 			.collection("ideas")
-// 			.where("owner.ref", "==", deletedUser.ref)
-// 			.get();
-
-// 		// Delete each user Idea
-// 		ideas.forEach(ideaDoc => batch.delete(ideaDoc.ref));
-
-// 		// Commit batch
-// 		try {
-// 			await batch.commit();
-// 			console.log("User deleted");
-// 		} catch (error) {
-// 			console.error("Batch deleted failed!\nUser not deleted.");
-// 		}
+// 	return ideas.addObject({
+// 		...data,
+// 		objectId
 // 	});
+// });
+
+// export const updateIndex = functions.firestore.document("ideas/{ideaId}").onUpdate(change => {
+// 	const data = change.after.data();
+// 	const objectId = change.after.id;
+
+// 	return ideas.saveObject({
+// 		...data,
+// 		objectId
+// 	});
+// });
+
+// export const deleteFromIndex = functions.firestore.document("ideas/{ideaId}").onDelete(snapshot => {
+// 	const objectId = snapshot.id;
+
+// 	return ideas.deleteObject(objectId);
+// });
 
 /**
  * **<==Recursively delete Idea==>**
@@ -109,23 +74,23 @@ export const ideaDeleteSync = functions.firestore
 export const onLike = functions.firestore
 	.document("ideas/{ideaId}/likes/{likeId}")
 	.onWrite((change, context) => {
-		/**
-		 * *On Add Like*
-		 */
+		// Add Like
 		if (!change.before.exists) {
 			db.collection("ideas")
 				.doc(context.params["ideaId"])
-				.update({ likesCount: FieldValue.increment(1) });
+				.update({ likesCount: FieldValue.increment(1) })
+				.catch(() => console.log("Idea already deleted."));
 		}
 
-		/**
-		 * *On Remove Like*
-		 */
+		// Remove Like
 		if (!change.after.exists) {
 			db.collection("ideas")
 				.doc(context.params["ideaId"])
-				.update({ likesCount: FieldValue.increment(-1) });
+				.update({ likesCount: FieldValue.increment(-1) })
+				.catch(() => console.log("Idea already deleted."));
 		}
+
+		return 0;
 	});
 
 /**
@@ -134,23 +99,23 @@ export const onLike = functions.firestore
 export const onAssignment = functions.firestore
 	.document("ideas/{ideaId}/assigned/{assignmentId}")
 	.onWrite((change, context) => {
-		/**
-		 * *On Assignment*
-		 */
+		// Assignment
 		if (!change.before.exists) {
 			db.collection("ideas")
 				.doc(context.params["ideaId"])
-				.update({ assignedCount: FieldValue.increment(1) });
+				.update({ assignedCount: FieldValue.increment(1) })
+				.catch(() => console.log("Idea already deleted."));
 		}
 
-		/**
-		 * *On Unassign*
-		 */
+		// Unassign
 		if (!change.after.exists) {
 			db.collection("ideas")
 				.doc(context.params["ideaId"])
-				.update({ assignedCount: FieldValue.increment(-1) });
+				.update({ assignedCount: FieldValue.increment(-1) })
+				.catch(() => console.log("Idea already deleted."));
 		}
+
+		return 0;
 	});
 
 /**
@@ -159,21 +124,21 @@ export const onAssignment = functions.firestore
 export const onComment = functions.firestore
 	.document("ideas/{ideaId}/comments/{assignmentId}")
 	.onWrite((change, context) => {
-		/**
-		 * *On Assignment*
-		 */
+		// New Comment
 		if (!change.before.exists) {
 			db.collection("ideas")
 				.doc(context.params["ideaId"])
-				.update({ commentCount: FieldValue.increment(1) });
+				.update({ commentCount: FieldValue.increment(1) })
+				.catch(() => console.log("Idea already deleted."));
 		}
 
-		/**
-		 * *On Unassign*
-		 */
+		// Delete Comment
 		if (!change.after.exists) {
 			db.collection("ideas")
 				.doc(context.params["ideaId"])
-				.update({ commentCount: FieldValue.increment(-1) });
+				.update({ commentCount: FieldValue.increment(-1) })
+				.catch(() => console.log("Idea already deleted."));
 		}
+
+		return 0;
 	});
