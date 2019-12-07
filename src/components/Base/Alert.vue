@@ -13,7 +13,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class Alert extends Vue {
-	//Props
+	// Props
 	@Prop({ default: "info" }) type: "danger" | "warn" | "info" | "success";
 }
 </script>
