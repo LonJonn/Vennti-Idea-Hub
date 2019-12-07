@@ -1,12 +1,34 @@
-#loader, #spinner {
-	@apply text-blue-500;
+#logo, #spinner {
+	@apply text-gray-900;
 }
 
-#loader {
-	@apply text-6xl font-thin tracking-wider;
-	@apply text-center;
+#logo {
+	@apply relative text-6xl font-bold tracking-tighter;
 
-	margin-top: 35vh;
+	width: max-content;
+	margin: 35vh auto 0;
+}
+
+#logo::after {
+	content: "";
+	opacity: 70%;
+	right: -0.75em;
+	bottom: -0.15em;
+	@apply absolute;
+	@apply w-16 h-16;
+	@apply bg-orange-500;
+	@apply rounded-full;
+}
+
+#logo::before {
+	content: "";
+	opacity: 80%;
+	right: -0.25em;
+	bottom: -0.25em;
+	@apply absolute;
+	@apply w-12 h-12;
+	@apply bg-orange-300;
+	@apply rounded-full;
 }
 
 #spinner {

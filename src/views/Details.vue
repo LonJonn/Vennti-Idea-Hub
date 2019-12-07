@@ -1,20 +1,29 @@
 <template>
 	<div>
-		<div v-if="loading">Loading...</div>
-		<div v-else class="mb-5 list text-blue-800 p-5">
-			<li>description: {{ idea.description }}</li>
-			<li>benefit: {{ idea.benefit }}</li>
-			<li>skills required: {{ idea.skillsRequired.join(", ") || "None" }}</li>
-			<li>opened: {{ idea.createdAt.toDate() }}</li>
-			<li>difficulty: {{ idea.difficulty }}</li>
-			<li>status: {{ idea.status }}</li>
-			<li>Owner: {{ idea.owner.displayName }}</li>
-			<button v-if="!userIsAssigned" @click="assignUser()" class="text-orange-600 my-3">Work on this</button>
-			<button v-else @click="unassignUser()" class="text-orange-600 my-3">GET ME OUT!!!</button>
+		<div v-if="!idea">Loading...</div>
+		<div v-else>
+			<h1 class="capitalize">New platform to make integrations easier • VI201</h1>
+			<div
+				class="p-5 rounded bg-gray-200 border-l-4 border-gray-600 font-light"
+			>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio quod qui harum sit, vel odio hic illo assumenda iure tempore itaque fugiat alias laborum voluptas unde eum? Ducimus, error ratione!</div>
+			<progress class="w-full rounded-full" max="100" value="20"></progress>
 			<br />
-			<AppLikes :ideaId="idea.id" />
-			<button class="button bg-red-500 float-right" @click="remove()">Delete</button>
-			<AppComments :ideaId="idea.id" />
+			<br />
+			<div class="mb-5 list text-blue-800">
+				<li>description: {{ idea.description }}</li>
+				<li>value: {{ idea.value }}</li>
+				<li>skills required: {{ idea.skillsRequired.join(", ") || "None" }}</li>
+				<li>opened: {{ idea.createdAt.toDate() }}</li>
+				<li>scale: {{ idea.scale }}</li>
+				<li>status: {{ idea.status }}</li>
+				<li>Owner: {{ idea.owner.displayName }}</li>
+				<button v-if="!userIsAssigned" @click="assignUser()" class="text-orange-600 my-3">Work on this</button>
+				<button v-else @click="unassignUser()" class="text-orange-600 my-3">GET ME OUT!!!</button>
+				<br />
+				<AppLikes :ideaId="idea.id" />
+				<router-link to="edit" append class="text-blue-500 float-right">Edit</router-link>
+				<AppComments :ideaId="idea.id" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -33,14 +42,11 @@ export default class Details extends Vue {
 	idea: AppTypes.Idea = null;
 	ref = db.collection("ideas").doc(this.$attrs.ideaId);
 	assigned: AppTypes.Assignment[] = [];
-	loading = true;
 
 	// Hooks
 	async mounted() {
 		await this.$bind("idea", this.ref);
 		await this.$bind("assigned", this.ref.collection("assigned"));
-
-		this.loading = false;
 	}
 
 	// Methods

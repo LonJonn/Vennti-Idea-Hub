@@ -1,0 +1,69 @@
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+	outline: none;
+}
+
+body {
+	background-color: #fcfcfc;
+}
+
+h1 {
+	@apply text-3xl font-bold mb-4 inline-block relative;
+}
+
+.label {
+	@apply block mb-1;
+	@apply text-gray-700;
+	@apply text-xs font-bold tracking-wide uppercase;
+}
+
+.input {
+	@apply appearance-none block w-full px-4 py-3;
+	@apply bg-gray-200 text-gray-700 border-gray-200;
+	@apply rounded border leading-tight outline-none font-light tracking-wide;
+
+	transition-duration: 0.2s;
+	transition-property: background-color, color, border;
+	transition-timing-function: ease-in-out;
+}
+
+.input:focus {
+	@apply bg-white border-primary-500;
+}
+
+/* [aria-label] {
+	position: relative;
+}
+
+[aria-label]:after {
+	content: attr(aria-label);
+	display: none;
+	position: absolute;
+	bottom: 120%;
+	left: 0px;
+	z-index: 5000;
+	pointer-events: none;
+	padding: 8px 10px;
+	line-height: 15px;
+	white-space: nowrap;
+	text-decoration: none;
+	text-indent: 0;
+	overflow: visible;
+	font-size: 0.9em;
+	font-weight: normal;
+	color: #fff;
+	text-shadow: 1px 0 1px #888;
+	background-color: #412917;
+	border-left: 6px solid #d37092;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+[aria-label]:hover:after,
+[aria-label]:focus:after {
+	display: block;
+} */

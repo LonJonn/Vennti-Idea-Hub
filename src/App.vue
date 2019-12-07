@@ -1,19 +1,13 @@
 <template>
-	<div id="app">
-		<nav id="nav">
-			<router-link class="mr-2" to="/">Home</router-link>
-			<router-link to="/ideas">Ideas</router-link>
-		</nav>
+	<div id="app" class="container lg:max-w-5xl">
+		<AppNavbar id="nav" />
 		<router-view />
 	</div>
 </template>
 
-<style lang="postcss" scoped>
-#app {
-	@apply m-5;
-}
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 
-#nav > a.router-link-exact-active {
-	@apply text-blue-500 font-semibold;
-}
-</style>
+@Component
+export default class App extends Vue {}
+</script>

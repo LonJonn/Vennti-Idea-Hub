@@ -26,41 +26,19 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
 import { auth, authProviders, db } from "@/firebase";
-import { clone } from "lodash";
-
-// Move to cloud function
-async function register(user: firebase.User) {
-	await db
-		.collection("users")
-		.doc(user.uid)
-		.set({
-			name: user.displayName,
-			profileIcon: user.photoURL,
-			skills: [],
-			likeCount: 0,
-			commentCount: 0,
-			assigned: 0
-		});
-}
 
 @Component
 export default class Home extends Vue {
 	// State
-	user = clone(auth.currentUser);
+	user = { ...auth.currentUser };
 	currentName = this.user ? this.user.displayName : null; // Should be logged in, but for now check
 
-	// Methods
-	async login() {
-		const res = await auth.signInWithPopup(authProviders.google);
-		this.user = clone(res.user);
-		this.currentName = this.user.displayName; // *
-
-		if (res.additionalUserInfo.isNewUser) await register(res.user);
+	mounted() {
+		document.body.classList.add("home-background");
 	}
 
-	async logout() {
-		auth.signOut();
-		this.user = null;
+	destroyed() {
+		document.body.classList.remove("home-background");
 	}
 
 	async updateProfile() {
@@ -82,3 +60,24 @@ export default class Home extends Vue {
 	}
 }
 </script>
+
+<style lang="postcss">
+.home-background {
+	background: #eef0f7;
+}
+
+.home-background::after {
+	content: "";
+
+	@apply absolute block;
+	@apply bg-white;
+
+	right: -10%;
+	left: -10%;
+	top: -10%;
+	height: 920px;
+
+	z-index: -1;
+	transform: skewY(-3deg);
+}
+</style>
