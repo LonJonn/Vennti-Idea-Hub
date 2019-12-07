@@ -48,7 +48,7 @@ export default class List extends Vue {
 
 .search-bar input {
 	@apply bg-gray-300;
-	@apply rounded-xl border;
+	@apply rounded border;
 
 	transition-duration: 0.2s;
 	transition-property: background-color, border;

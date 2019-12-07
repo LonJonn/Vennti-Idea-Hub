@@ -71,7 +71,7 @@ export default class HelperComponent extends Vue {}
 	@apply absolute w-8;
 	@apply text-4xl text-green-500;
 
-	transform: translateX(-135%);
+	transform: translateX(-150%);
 }
 
 .list .title {

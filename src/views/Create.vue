@@ -58,8 +58,6 @@
 			</form>
 			<AppHelper />
 		</div>
-
-		<!-- <input v-model="ideaForm.skillsRequired" placeholder="required skills" type="text" /> -->
 	</div>
 </template>
 
@@ -121,7 +119,9 @@ export default class Create extends Vue {
 
 <style lang="postcss" scoped>
 button {
-	@apply rounded-md mt-2 px-12 text-2xl py-4 bg-green-300 text-green-700 w-full shadow-md;
+	@apply w-full mt-2 px-12 py-4 text-2xl;
+	@apply text-green-700 bg-green-300;
+	@apply rounded-md shadow-md;
 }
 
 button:hover {
