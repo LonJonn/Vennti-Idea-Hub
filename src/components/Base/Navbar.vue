@@ -8,7 +8,7 @@
 		</div>
 		<div class="right">
 			<AppButton v-if="!user" @click.native="signInAction()">Log in</AppButton>
-			<AppDropdown v-else title="Menu" :right="true">
+			<AppDropdown v-else title="Menu" right>
 				<span class="font-semibold">Welcome, {{ this.user.displayName.split(" ")[0] }}</span>
 				<hr />
 				<router-link to="/profile">Edit Profile</router-link>

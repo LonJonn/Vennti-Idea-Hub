@@ -54,7 +54,7 @@
 					<span slot="noResult">Oops! No skills found. Try searching for something else.</span>
 				</multiselect>
 
-				<AppButton @click.native="add()">Add</AppButton>
+				<AppButton @click.native="add()" full>Add</AppButton>
 			</form>
 			<AppHelper />
 		</div>
@@ -119,7 +119,7 @@ export default class Create extends Vue {
 
 <style lang="postcss" scoped>
 button {
-	@apply w-full mt-2 px-12 py-4 text-2xl;
+	@apply mt-2 px-12 py-4 text-2xl;
 	@apply text-green-700 bg-green-300;
 	@apply rounded-md shadow-md;
 }

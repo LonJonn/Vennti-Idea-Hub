@@ -1,5 +1,5 @@
 <template>
-	<button :class="[{ 'rounded': rounded }, theme]">
+	<button :class="[{ round, center, full}, theme]">
 		<slot></slot>
 	</button>
 </template>
@@ -10,7 +10,9 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 @Component
 export default class ButtonComponent extends Vue {
 	@Prop() theme: "dark" | "light" | "outline" | "primary";
-	@Prop({ default: false }) rounded: boolean;
+	@Prop({ type: Boolean }) round: boolean;
+	@Prop({ type: Boolean }) center: boolean;
+	@Prop({ type: Boolean }) full: boolean;
 }
 </script>
 
@@ -27,6 +29,18 @@ button {
 button:active {
 	transition: 0.1s ease-in-out filter;
 	filter: saturate(0.5);
+}
+
+.round {
+	@apply rounded-full;
+}
+
+.center {
+	@apply block mx-auto;
+}
+
+.full {
+	@apply w-full;
 }
 
 .light {
@@ -61,9 +75,5 @@ button:active {
 
 .primary:hover {
 	@apply bg-primary-500 text-primary-100;
-}
-
-.rounded {
-	@apply rounded-full;
 }
 </style>

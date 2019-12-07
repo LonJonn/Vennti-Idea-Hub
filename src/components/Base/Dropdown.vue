@@ -23,7 +23,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 export default class DropdownComponent extends Vue {
 	// Props
 	@Prop() title: string;
-	@Prop({ default: false }) right: boolean;
+	@Prop({ type: Boolean }) right: boolean;
 }
 </script>
 
@@ -35,7 +35,6 @@ export default class DropdownComponent extends Vue {
 #menucontainer {
 	@apply absolute;
 	top: 100%;
-	min-width: 10em;
 }
 
 .right-aligned {
@@ -75,6 +74,7 @@ hr {
 
 #dropmenu * {
 	@apply px-4 py-1;
+	@apply whitespace-no-wrap;
 }
 
 #dropdown:hover #dropmenu,
