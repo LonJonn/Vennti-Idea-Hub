@@ -1,5 +1,5 @@
 <template>
-	<button :class="[{ round, center, full}, theme]">
+	<button :class="[{ round, center, full, tile}, theme]">
 		<slot></slot>
 	</button>
 </template>
@@ -13,6 +13,7 @@ export default class ButtonComponent extends Vue {
 	@Prop({ type: Boolean }) round: boolean;
 	@Prop({ type: Boolean }) center: boolean;
 	@Prop({ type: Boolean }) full: boolean;
+	@Prop({ type: Boolean }) tile: boolean;
 }
 </script>
 
@@ -30,7 +31,6 @@ button:active {
 	transition: 0.1s ease-in-out filter;
 	filter: saturate(0.5);
 }
-
 .round {
 	@apply rounded-full;
 }
@@ -41,6 +41,10 @@ button:active {
 
 .full {
 	@apply w-full;
+}
+
+.tile {
+	@apply rounded-none;
 }
 
 .light {

@@ -3,7 +3,11 @@
 		<h1>Ideas</h1>
 		<div class="search-bar">
 			<input type="text" name="search" placeholder="Type to search" />
-			<AppButton theme="light">Search</AppButton>
+			<div class="button-group">
+				<AppButton tile theme="dark">left</AppButton>
+				<AppButton tile theme="dark">middle</AppButton>
+				<AppButton tile theme="dark">right</AppButton>
+			</div>
 		</div>
 		<div class="ideas-container">
 			<AppIdea v-for="idea of ideas" :key="idea.id" :idea="idea" />
@@ -37,17 +41,14 @@ export default class List extends Vue {
 .search-bar {
 	display: grid;
 	grid-template-columns: 3fr 1fr;
-	grid-gap: 2em;
+	grid-gap: 1em;
 
 	@apply mb-12;
 }
 
-.search-bar * {
-	@apply py-3 px-6;
-}
-
 .search-bar input {
-	@apply bg-gray-200 border-gray-200;
+	@apply py-3 px-6;
+	@apply bg-gray-200;
 	@apply rounded border;
 
 	transition-duration: 0.2s;
@@ -58,6 +59,13 @@ export default class List extends Vue {
 .search-bar input:focus {
 	@apply bg-white;
 	@apply border-primary-500;
+}
+
+.search-bar .button-group {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+
+	@apply overflow-hidden rounded-md bg-pink-400;
 }
 
 .ideas-container {

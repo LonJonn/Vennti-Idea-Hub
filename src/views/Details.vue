@@ -2,10 +2,17 @@
 	<div>
 		<div v-if="!idea">Loading...</div>
 		<div v-else>
-			<h1 class="capitalize">New platform to make integrations easier • VI201</h1>
-			<div
-				class="p-5 rounded bg-gray-200 border-l-4 border-gray-600 font-light"
-			>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio quod qui harum sit, vel odio hic illo assumenda iure tempore itaque fugiat alias laborum voluptas unde eum? Ducimus, error ratione!</div>
+			<h1 class="capitalize flex items-center">
+				New platform to make integrations easier
+				<span class="code">VI201</span>
+			</h1>
+			<p class="font-semibold text-gray-900 mb-1">Value</p>
+			<p
+				class="py-5 px-6 rounded bg-green-200 border-l-8 border border-green-400 font-light mb-8 flex items-center"
+			>
+				<i class="fas fa-info-circle text-green-500 mr-6 text-3xl"></i>
+				<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio quod qui harum sit, vel odio hic illo assumenda iure tempore itaque fugiat alias laborum voluptas unde eum? Ducimus, error ratione!</span>
+			</p>
 			<progress class="w-full rounded-full" max="100" value="20"></progress>
 			<br />
 			<br />
@@ -100,7 +107,9 @@ export default class Details extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-.button {
-	@apply text-lg text-white font-semibold px-6 py-1 rounded mt-2;
+.code {
+	@apply inline-block px-3 py-1 ml-3;
+	@apply text-sm bg-gray-300 text-gray-700 font-semibold;
+	@apply rounded;
 }
 </style>
