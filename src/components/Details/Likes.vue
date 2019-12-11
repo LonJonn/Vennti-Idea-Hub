@@ -1,9 +1,14 @@
 <template>
-	<span class="mb-5">
-		<p>likes: {{ likes.length }}</p>
-		<button v-if="!userHasLiked" class="like" @click="addLike()">Like</button>
-		<button v-else class="like" @click="removeLike()">Unlike</button>
-		{{ recentLikes }}
+	<span>
+		<i v-if="!userHasLiked" class="fas fa-thumbs-up icon-button" @click="addLike()"></i>
+		<i v-else class="fas fa-thumbs-up icon-button" @click="removeLike()"></i>
+		Liked by {{ readableLikes }}
+		<span v-if="remainingLikes.length" class="remaining-likes">
+			and {{ remainingLikes.length }} others
+			<ul>
+				<li v-for="(name, idx) in remainingLikes" :key="idx">{{ name }}</li>
+			</ul>
+		</span>
 	</span>
 </template>
 
@@ -69,12 +74,25 @@ export default class LikesComponent extends Vue {
 	}
 
 	get recentLikes() {
+		return [...this.likes]
+			.sort((a, b) => {
+				if (a.owner.id === auth.currentUser.uid) return -1;
+				else return 1;
+			})
+			.slice(0, 2);
+	}
+
+	get remainingLikes() {
+		return this.likes
+			.filter(like => !this.recentLikes.includes(like))
+			.map(like => like.owner.displayName);
+	}
+
+	get readableLikes() {
 		return (
-			this.likes
-				.map(
-					like =>
-						(like.owner.id === auth.currentUser.uid ? "You" : like.owner.displayName) +
-						like.value
+			this.recentLikes
+				.map(like =>
+					auth.currentUser.uid === like.owner.id ? "You" : like.owner.displayName
 				)
 				.join(", ") || "None"
 		);
@@ -83,21 +101,21 @@ export default class LikesComponent extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-.list > li {
-	@apply capitalize;
+.remaining-likes {
+	@apply relative;
 }
 
-.button {
-	@apply text-lg text-white font-semibold px-6 py-1 rounded mt-2;
+.remaining-likes:hover {
+	@apply underline;
 }
 
-.like {
-	@apply button;
-	@apply bg-green-500;
+.remaining-likes:hover ul {
+	@apply block;
 }
 
-.close {
-	@apply button;
-	@apply bg-red-400 float-right;
+.remaining-likes ul {
+	@apply hidden absolute mb-5 px-2 py-1;
+	@apply text-xs text-white bg-gray-900;
+	@apply rounded bottom-0 left-0 whitespace-no-wrap;
 }
 </style>

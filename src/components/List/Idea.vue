@@ -39,10 +39,10 @@ export default class IdeaComponent extends Vue {
 
 	// Computed
 	get initials() {
-		const [first, second] = this.idea.owner.displayName.split(" ");
-		if (!second) return first;
+		const [first, last] = this.idea.owner.displayName.split(" ");
+		if (!last) return first;
 
-		return `${first} ${second[0]}.`;
+		return `${first} ${last[0]}.`;
 	}
 }
 </script>
@@ -130,8 +130,8 @@ h2 {
 	@apply font-semibold text-lg;
 	@apply rounded-full shadow-full cursor-pointer;
 
-	top: -0.75rem;
-	right: -0.75rem;
+	top: -1rem;
+	right: -1rem;
 }
 
 .status.open {

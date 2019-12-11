@@ -7,7 +7,7 @@
 			<router-link to="/ideas/new">Create</router-link>
 		</div>
 		<div class="right">
-			<AppButton v-if="!user" @click.native="signInAction()">Log in</AppButton>
+			<AppButton theme="light" v-if="!user" @click.native="signInAction()">Log in</AppButton>
 			<AppDropdown v-else title="Menu" right>
 				<span class="font-semibold">Welcome, {{ this.user.displayName.split(" ")[0] }}</span>
 				<hr />

@@ -33,37 +33,30 @@ h1 {
 	@apply bg-white border-primary-500;
 }
 
-/* [aria-label] {
+.icon-button {
+	@apply inline-flex justify-center w-8 h-8 items-center rounded-full cursor-pointer;
+}
+
+.icon-button:hover {
+	@apply bg-gray-200;
+}
+
+[aria-label] {
 	position: relative;
 }
 
 [aria-label]:after {
+	@apply hidden absolute px-2 py-1;
+	@apply text-xs bg-gray-900 text-white font-light;
+	@apply whitespace-no-wrap z-50 rounded;
+
 	content: attr(aria-label);
-	display: none;
-	position: absolute;
-	bottom: 120%;
-	left: 0px;
-	z-index: 5000;
-	pointer-events: none;
-	padding: 8px 10px;
-	line-height: 15px;
-	white-space: nowrap;
-	text-decoration: none;
-	text-indent: 0;
-	overflow: visible;
-	font-size: 0.9em;
-	font-weight: normal;
-	color: #fff;
-	text-shadow: 1px 0 1px #888;
-	background-color: #412917;
-	border-left: 6px solid #d37092;
-	-webkit-border-radius: 2px;
-	border-radius: 2px;
-	-webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
-	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+	bottom: 125%;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 [aria-label]:hover:after,
 [aria-label]:focus:after {
 	display: block;
-} */
+} 

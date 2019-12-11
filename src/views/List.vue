@@ -4,9 +4,9 @@
 		<div class="search-bar">
 			<input type="text" name="search" placeholder="Type to search" />
 			<div class="button-group">
-				<AppButton tile theme="dark">left</AppButton>
-				<AppButton tile theme="dark">middle</AppButton>
-				<AppButton tile theme="dark">right</AppButton>
+				<AppButton tile class="border rounded-l-lg">left</AppButton>
+				<AppButton tile class="border border-l-0 border-r-0">middle</AppButton>
+				<AppButton tile class="border rounded-r-lg">right</AppButton>
 			</div>
 		</div>
 		<div class="ideas-container">
@@ -61,11 +61,8 @@ export default class List extends Vue {
 	@apply border-primary-500;
 }
 
-.search-bar .button-group {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-
-	@apply overflow-hidden rounded-md bg-pink-400;
+.search-bar .button-group * {
+	@apply bg-gray-200;
 }
 
 .ideas-container {

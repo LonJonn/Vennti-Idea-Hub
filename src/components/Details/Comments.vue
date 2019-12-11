@@ -1,27 +1,35 @@
 <template>
-	<div class="mt-5">
-		<input v-model="content" type="text" placeholder="type comment here..." />
-		<br />
-		<button @click="addComment()" class="text-blue-600">Add Comment</button>
-		<ul v-for="comment in comments" :key="comment.id" class="p-3 rounded-lg bg-gray-200 mt-3">
-			<li>content: {{ comment.content }}</li>
-			<li>posted: {{ comment.createdAt.toDate() }}</li>
-			<li>
-				by:
-				<img
-					v-bind:src="comment.owner.photoUrl"
-					width="30px"
-					alt="User Icon"
-					class="inline rounded-full"
-				/>
-				{{ comment.owner.displayName }}
-			</li>
-			<li
+	<div>
+		<form @submit.prevent class="flex items-center mb-2">
+			<input
+				v-model="content"
+				class="comment-input border-gray-500 focus:border-primary-500"
+				type="text"
+				placeholder="Type comment here..."
+			/>
+			<i @click="addComment()" class="fas fa-paper-plane icon-button text-gray-800 mx-4" />
+		</form>
+
+		<div v-for="comment in comments" :key="comment.id" class="border-b px-4 py-2">
+			<p class="mb-1">{{ comment.content }}</p>
+			<span
 				v-if="isOwner(comment.owner.id)"
 				@click="deleteComment(comment.id)"
-				class="text-red-500 cursor-pointer"
-			>Delete</li>
-		</ul>
+				class="text-red-500 cursor-pointer float-right hover:underline"
+			>Delete</span>
+			<router-link
+				:to="'/users/' + comment.owner.id"
+				class="text-sm text-gray-600 hover:text-blue-600 hover:underline"
+			>
+				<img
+					v-bind:src="comment.owner.photoUrl"
+					width="20px"
+					alt="User Icon"
+					class="inline rounded-full mb-1"
+				/>
+				{{ comment.owner.displayName }} at {{ comment.createdAt.toDate() | moment("D MMM YY") }}
+			</router-link>
+		</div>
 	</div>
 </template>
 
@@ -89,3 +97,9 @@ export default class CommentsComponent extends Vue {
 	}
 }
 </script>
+
+<style lang="postcss" scoped>
+.comment-input {
+	@apply border-b w-full px-3 py-2 bg-transparent font-light;
+}
+</style>
