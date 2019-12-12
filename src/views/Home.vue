@@ -1,26 +1,28 @@
 <template>
-	<div>
-		<button
-			v-if="!user"
-			@click="login()"
-			class="bg-blue-500 text-white px-3 py-2 rounded-lg mt-2"
-		>Login</button>
-		<div v-else>
-			<pre>ID: {{ user.uid }}</pre>
-			<span>
-				Name:
-				<input v-model="user.displayName" class="border-blue-500 border rounded mr-2" />
-			</span>
+	<v-container>
+		<v-layout text-center>
 			<button
-				:disabled="!displayNameHasChanged"
-				@click="updateProfile()"
-				class="bg-blue-400 disabled:bg-red-400 disabled:cursor-not-allowed"
-			>Change</button>
-			<br />
-			<button @click="logout()" class="bg-orange-500 text-white px-3 py-2 rounded-lg mt-2">Logout</button>
-			<button class="bg-red-500 text-white px-3 py-2 rounded-lg mt-2">DELETE</button>
-		</div>
-	</div>
+				v-if="!user"
+				@click="login()"
+				class="bg-blue-500 text-white px-3 py-2 rounded-lg mt-2"
+			>Login</button>
+			<div v-else>
+				<pre>ID: {{ user.uid }}</pre>
+				<span>
+					Name:
+					<input v-model="user.displayName" class="border-blue-500 border rounded mr-2" />
+				</span>
+				<button
+					:disabled="!displayNameHasChanged"
+					@click="updateProfile()"
+					class="bg-blue-400 disabled:bg-red-400 disabled:cursor-not-allowed"
+				>Change</button>
+				<br />
+				<button @click="logout()" class="bg-orange-500 text-white px-3 py-2 rounded-lg mt-2">Logout</button>
+				<button class="bg-red-500 text-white px-3 py-2 rounded-lg mt-2">DELETE</button>
+			</div>
+		</v-layout>
+	</v-container>
 </template>
 
 <script lang="ts">
