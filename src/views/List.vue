@@ -3,11 +3,6 @@
 		<h1>Ideas</h1>
 		<div class="search-bar">
 			<input type="text" name="search" placeholder="Type to search" />
-			<div class="button-group">
-				<AppButton tile class="border rounded-l-lg">left</AppButton>
-				<AppButton tile class="border border-l-0 border-r-0">middle</AppButton>
-				<AppButton tile class="border rounded-r-lg">right</AppButton>
-			</div>
 		</div>
 		<div class="ideas-container">
 			<AppIdea v-for="idea of ideas" :key="idea.id" :idea="idea" />
@@ -25,10 +20,7 @@ import * as AppTypes from "@/typings";
 @Component({
 	components: { AppIdea },
 	firestore: {
-		ideas: db
-			.collection("ideas")
-			.orderBy("createdAt", "desc")
-			.limit(10)
+		ideas: db.collection("ideas").orderBy("createdAt", "desc")
 	}
 })
 export default class List extends Vue {
@@ -40,14 +32,14 @@ export default class List extends Vue {
 <style lang="postcss" scoped>
 .search-bar {
 	display: grid;
-	grid-template-columns: 3fr 1fr;
+	grid-template-columns: 1fr;
 	grid-gap: 1em;
 
 	@apply mb-12;
 }
 
 .search-bar input {
-	@apply py-3 px-6;
+	@apply py-2 px-4;
 	@apply bg-gray-200;
 	@apply rounded border;
 
@@ -61,14 +53,10 @@ export default class List extends Vue {
 	@apply border-primary-500;
 }
 
-.search-bar .button-group * {
-	@apply bg-gray-200;
-}
-
 .ideas-container {
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-gap: 2em;
+	grid-gap: 2.5em;
 
 	@apply mb-8;
 }

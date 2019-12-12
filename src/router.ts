@@ -43,6 +43,11 @@ const router = new Router({
 			props: true
 		},
 		{
+			path: "/user/:userId",
+			name: "profile",
+			component: () => import("./views/Profile.vue")
+		},
+		{
 			path: "/login",
 			name: "login",
 			component: () => import("./views/Login.vue")

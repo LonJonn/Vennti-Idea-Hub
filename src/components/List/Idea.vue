@@ -18,7 +18,7 @@
 		</div>
 		<div class="footer">
 			<span class="date">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span>
-			<router-link :to="'/users/' + idea.owner.id" class="user">
+			<router-link :to="'/user/' + idea.owner.id" class="user">
 				<img :src="idea.owner.photoUrl" align="middle" />
 				{{ initials }}
 			</router-link>

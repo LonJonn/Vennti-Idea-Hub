@@ -10,25 +10,25 @@
 			<i @click="addComment()" class="fas fa-paper-plane icon-button text-gray-800 mx-4" />
 		</form>
 
-		<div v-for="comment in comments" :key="comment.id" class="border-b px-4 py-2">
+		<div v-for="comment in comments" :key="comment.id" class="border-b px-4 py-2 mb-4">
 			<p class="mb-1">{{ comment.content }}</p>
 			<span
 				v-if="isOwner(comment.owner.id)"
 				@click="deleteComment(comment.id)"
 				class="text-red-500 cursor-pointer float-right hover:underline"
 			>Delete</span>
-			<router-link
-				:to="'/users/' + comment.owner.id"
-				class="text-sm text-gray-600 hover:text-blue-600 hover:underline"
-			>
-				<img
-					v-bind:src="comment.owner.photoUrl"
-					width="20px"
-					alt="User Icon"
-					class="inline rounded-full mb-1"
-				/>
-				{{ comment.owner.displayName }} at {{ comment.createdAt.toDate() | moment("D MMM YY") }}
-			</router-link>
+			<span class="text-sm text-gray-600">
+				<router-link :to="'/user/' + comment.owner.id" class="hover:text-blue-600 hover:underline">
+					<img
+						v-bind:src="comment.owner.photoUrl"
+						width="20px"
+						alt="User Icon"
+						class="inline rounded-full mb-1"
+					/>
+					{{ comment.owner.displayName }}
+				</router-link>
+				at {{ comment.createdAt.toDate() | moment("D MMM YY") }}
+			</span>
 		</div>
 	</div>
 </template>

@@ -2,9 +2,11 @@
 	<span>
 		<i v-if="!userHasLiked" class="fas fa-thumbs-up icon-button" @click="addLike()"></i>
 		<i v-else class="fas fa-thumbs-up icon-button" @click="removeLike()"></i>
-		Liked by {{ readableLikes }}
+		Liked by
+		<strong>{{ readableLikes }}</strong>
 		<span v-if="remainingLikes.length" class="remaining-likes">
-			and {{ remainingLikes.length }} others
+			and
+			<strong>{{ remainingLikes.length }}</strong> others
 			<ul>
 				<li v-for="(name, idx) in remainingLikes" :key="idx">{{ name }}</li>
 			</ul>
@@ -85,14 +87,16 @@ export default class LikesComponent extends Vue {
 	get remainingLikes() {
 		return this.likes
 			.filter(like => !this.recentLikes.includes(like))
-			.map(like => like.owner.displayName);
+			.map(like => like.owner.displayName.split(" ")[0]);
 	}
 
 	get readableLikes() {
 		return (
 			this.recentLikes
 				.map(like =>
-					auth.currentUser.uid === like.owner.id ? "You" : like.owner.displayName
+					auth.currentUser.uid === like.owner.id
+						? "You"
+						: like.owner.displayName.split(" ")[0]
 				)
 				.join(", ") || "None"
 		);

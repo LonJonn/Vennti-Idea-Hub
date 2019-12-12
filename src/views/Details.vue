@@ -3,16 +3,18 @@
 		<div v-if="!idea">Loading...</div>
 		<div v-else>
 			<h1 class="capitalize flex items-center">
-				New platform to make integrations easier
-				<span class="code">VI201</span>
+				{{ idea.title }}
+				<span v-if="idea.projectCode" class="code">{{ idea.projectCode }}</span>
 			</h1>
 			<p class="-mt-4 text-gray-600">
 				Posted on
 				<span class="font-normal">{{ idea.createdAt.toDate() | moment("D MMM YY") }}</span> By
 				<router-link
-					:to="'/users/' + idea.owner.id"
+					:to="'/user/' + idea.owner.id"
 					class="font-normal cursor-pointer hover:text-blue-500 underline"
 				>{{ idea.owner.displayName }}</router-link>
+				•
+				{{ idea.scale }} scale
 			</p>
 
 			<h3>Tracking</h3>
@@ -21,13 +23,13 @@
 					<div
 						role="progress"
 						class="bg-green-500 h-full text-white flex flex-col items-center justify-center text-xs"
-						:style="'width: ' + 45 +'%;'"
-					>45%</div>
+						:style="'width: ' + idea.tracking +'%;'"
+					>{{ idea.tracking }}%</div>
 				</div>
 				<span>Due 14 Nov. 2020 • 3 weeks from now</span>
 				<span class="float-right">
 					Logged
-					<span class="font-medium">14 / 20</span> hours
+					<span class="font-medium">{{ idea.timeEstimation[0] }} / {{ idea.timeEstimation[1] }}</span> hours
 				</span>
 			</div>
 
@@ -36,7 +38,7 @@
 				<router-link
 					v-for="user in assigned.map(assignment => assignment.owner)"
 					:key="user.id"
-					:to="'/users/' + user.id"
+					:to="'/user/' + user.id"
 					:aria-label="user.displayName"
 					class="mr-4"
 				>
@@ -46,12 +48,11 @@
 			</p>
 
 			<h3>Value</h3>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio quod qui harum sit, vel odio hic illo assumenda iure tempore itaque fugiat alias laborum voluptas unde eum? Ducimus, error ratione!</p>
+			<p>{{ idea.value }}</p>
 
 			<h3>Description</h3>
 			<div class="mb-5 rounded bg-gray-200 border px-5 py-3">
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ab totam eius qui necessitatibus voluptatem consectetur quis ipsum, incidunt, quisquam minus nobis officia animi quas dolorem corporis magnam nostrum veniam?</p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ab totam eius qui necessitatibus voluptatem consectetur quis ipsum, incidunt, quisquam minus nobis officia animi quas dolorem corporis magnam nostrum veniam?</p>
+				<p v-for="(p, idx) in idea.description.split('\n')" :key="idx">{{ p }}</p>
 				<ul>
 					<li>Something</li>
 					<li>Else</li>
