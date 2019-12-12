@@ -4,7 +4,7 @@
 		<v-navigation-drawer app dark v-model="drawer" color="grey darken-4">
 			<v-list-item>
 				<v-list-item-content>
-					<v-list-item-title class="title orange--text text--lighten-1 font-weight-bold">Venntiboard</v-list-item-title>
+					<v-list-item-title class="headline primary-light--text font-weight-bold">Venntiboard</v-list-item-title>
 					<v-list-item-subtitle>Issue tracker</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
@@ -63,27 +63,39 @@
 		<!-- Navbar -->
 		<v-app-bar app flat color="#fafafa" class="app-bar px-2">
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-			<v-toolbar-title class="text-capitalize font-weight-bold headline">{{ $route.name }}</v-toolbar-title>
 
 			<v-spacer></v-spacer>
 
-			<v-btn icon>
+			<v-btn icon class="mr-2">
 				<v-icon>mdi-magnify</v-icon>
 			</v-btn>
+
+			<v-btn v-if="!user" text @click="signInAction()">Login</v-btn>
+			<v-btn v-else text @click="signOutAction()">Logout</v-btn>
 		</v-app-bar>
 
 		<!-- Content -->
-		<v-content class="mx-8">
-			<router-view />
+		<v-content>
+			<v-container px-6>
+				<router-view />
+			</v-container>
 		</v-content>
 	</v-app>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { State, Action } from "vuex-class";
+import { auth } from "@/firebase";
 
 @Component
 export default class App extends Vue {
+	// Store
+	@State user: firebase.User;
+	@Action signInAction: () => Promise<void>;
+	@Action signOutAction: () => Promise<void>;
+
+	// State
 	drawer = true;
 }
 </script>
